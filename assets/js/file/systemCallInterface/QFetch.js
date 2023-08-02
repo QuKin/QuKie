@@ -1,17 +1,17 @@
 /**
  * @name          QFetch
  * @version       1.0
- * @author        QuKin <13606184008@163.com>
+ * @author        QuKie <13606184008@163.com>
  * @description   Fetch封装
  * @Date          2022-11-26 12:29:09
- * @LastEditors   QuKin
- * @LastEditTime  2022-11-26 12:49:51
+ * @LastEditors   QuKie
+ * @LastEditTime  2023-08-02 15:32:12
  */
 
 
 /**
  * 使用接口
- * export const postUser=(params)=>QFetch('user',params,'post','localhost/api/v1/')
+ * const postUser=(params)=>QFetch('user',params,'post','localhost/api/v1/')
  */
 export default async (url = '', data = {}, type = 'GET', baseUrl = "localhost/") => {
     url = baseUrl + url;

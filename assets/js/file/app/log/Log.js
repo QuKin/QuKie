@@ -2,18 +2,23 @@
  * @name          Log
  * @version       1.0
  * @author        QuKie <13606184008@163.com>
- * @description   日志
+ * @description   app日志
  * @Date          2023-08-02 12:51:11
  * @LastEditors   QuKie
- * @LastEditTime  2023-08-02 15:54:49
+ * @LastEditTime  2023-08-02 16:13:45
 */
 
 import { QSelect, QInsert } from '../../systemCallInterface/QStorage.js'
 import { getDateTime } from '../../systemCallInterface/QCommon.js'
 
 class Log {
-    constructor() {
+    #name;
+    constructor(app) {
         this.init();
+        if (typeof app === "undefined") {
+            throw new Error('必须传入app对象')
+        }
+        this.#name = app.name;
     }
     init() {
         // 操作日志
@@ -25,7 +30,7 @@ class Log {
      * @param {String} particulars 详情
      */
     add(type, particulars) {
-        this.operatingLog.unshift({
+        this.operatingLog.push({
             username: QSelect('username').data,
             typeOfOperation: type,
             particulars: particulars,
@@ -33,20 +38,20 @@ class Log {
             addr: ipJson.addr,
             ip: ipJson.ip
         });
-        if (this.operatingLog.length > qukie.logLength) {
+        if (this.operatingLog.length > qukie.appLogLength) {
             this.operatingLog.pop();
         }
-        QInsert('operatingLog', JSON.stringify(this.operatingLog));
+        QInsert(this.#name + '-operatingLog', JSON.stringify(this.operatingLog));
     }
     /**
      * 展示所有日志
      * @returns {QApi}
      */
     show() {
-        if (QSelect('operatingLog').code === 404) {
-            QInsert('operatingLog', '[]');
+        if (QSelect(this.#name + '-operatingLog').code === 404) {
+            QInsert(this.#name + '-operatingLog', '[]');
         }
-        this.operatingLog = JSON.parse(QSelect('operatingLog').data);
+        this.operatingLog = JSON.parse(QSelect(this.#name + '-operatingLog').data);
         if (this.operatingLog.length === 0) {
             return QApi([], 'not found', 404);
         }
@@ -58,7 +63,7 @@ class Log {
      */
     clear() {
         this.operatingLog = [];
-        QInsert('operatingLog', '[]');
+        QInsert(this.#name + '-operatingLog', '[]');
         return QApi(this.operatingLog);
     }
 }

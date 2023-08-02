@@ -2,14 +2,14 @@
  * @name          QCommon
  * @description   常用的方法封装
  * @version       1.0
- * @author        QuKin
+ * @author        QuKie
  * @Date          2022-11-16 13:51:58
- * @LastEditors   QuKin
+ * @LastEditors   QuKie
  * @LastEditTime  2022-11-29 18:40:44
  */
 
 
-import { Api } from './QApi';
+import { Api } from './QApi.js';
 
 /**
  * 获取格式化时间

@@ -1,10 +1,10 @@
 /**
  * @name          QDB
  * @version       1.0
- * @author        QuKin <13606184008@163.com>
+ * @author        QuKie <13606184008@163.com>
  * @description   indexedDB封装
  * @Date          2022-11-27 16:04:41
- * @LastEditors   QuKin
+ * @LastEditors   QuKie
  * @LastEditTime  2022-11-30 18:25:47
  */
 

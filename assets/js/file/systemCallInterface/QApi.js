@@ -2,10 +2,10 @@
  * @name          QApi
  * @description   js文件进行传输的API格式
  * @version       1.0
- * @author        QuKin
+ * @author        QuKie
  * @Date          2022-11-16 10:00:22
- * @LastEditors   QuKin
- * @LastEditTime  2022-11-19 14:51:33
+ * @LastEditors   QuKie
+ * @LastEditTime  2023-08-02 15:43:55
  */
 
 /**
@@ -21,8 +21,10 @@
  *  
  *  4**
  *      404：空
+ *  
+ *  5**
+ *      501：错误
  */
-
 export const Api = (data = [], message = 'success', code = 200) => {
     return {
         data, message, code

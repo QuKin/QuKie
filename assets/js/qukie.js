@@ -22,6 +22,9 @@
         init() {
             this._version = '0.0.1';
             this._debug = true;
+            this.getSetting();
+        }
+        getSetting(){
             this._backgroundImage = {
                 computer: '',
                 mobile: '',

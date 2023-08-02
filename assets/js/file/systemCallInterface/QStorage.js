@@ -2,13 +2,13 @@
  * @name          QStorage
  * @description   存储封装 -> localStorage+sessionStorage
  * @version       1.0
- * @author        QuKin
+ * @author        QuKie
  * @Date          2022-11-16 09:13:24
  * @LastEditors   QuKin
- * @LastEditTime  2022-11-29 18:40:56
+ * @LastEditTime  2023-08-02 13:24:15
  */
 
-import { Api } from './QApi';
+import { Api } from './QApi.js';
 
 /**
  * 查询指定数据
