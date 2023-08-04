@@ -31,7 +31,7 @@ class QuKie {
         // 系统最多日志数量
         this.logLength = 300;
         // 系统强度，0：不记录；1：只记录失败；2：只记录修改成功和失败；3：记录所有包括获取成功
-        this.logDissociation = 3;
+        this.logDissociation = 2;
     }
     sysFun() {
         this.setting = Setting;
