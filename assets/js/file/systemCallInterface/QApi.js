@@ -26,11 +26,9 @@
  *      501：错误
  *      502：类型错误
  *      503：范围错误
+ *      504：参数错误
  */
 export const Api = (data = [], message = 'success', code = 200) => {
-    if (code>300){
-        throw new Error(message);
-    }
     return {
         data, message, code
     }

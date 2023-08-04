@@ -10,12 +10,12 @@
 export default class Volume {
     #volume;
     constructor() {
-        this.init();
+        this.#init();
     }
     /**
      * 初始化
      */
-    init() {
+    #init() {
         this.#volume = 0.5;
     }
     /**

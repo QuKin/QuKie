@@ -8,16 +8,22 @@
  * @LastEditTime  2023-08-02 15:54:49
 */
 
-import { QSelect, QInsert } from '../../systemCallInterface/QStorage.js'
+import { QSelect, QInsert,QIsSelect } from '../../systemCallInterface/QStorage.js'
 import { getDateTime } from '../../systemCallInterface/QCommon.js'
 
 class Log {
     constructor() {
-        this.init();
+        this.#init();
     }
-    init() {
+    #init() {
         // 操作日志
         this.operatingLog = [];
+
+        if (QIsSelect('operatingLog')) {
+            QInsert('operatingLog', '[]');
+        }else{
+            this.operatingLog=JSON.parse(QSelect('operatingLog').data);
+        }
     }
     /**
      * 添加日志
@@ -43,9 +49,6 @@ class Log {
      * @returns {QApi}
      */
     show() {
-        if (QSelect('operatingLog').code === 404) {
-            QInsert('operatingLog', '[]');
-        }
         this.operatingLog = JSON.parse(QSelect('operatingLog').data);
         if (this.operatingLog.length === 0) {
             return QApi([], 'not found', 404);

@@ -12,6 +12,7 @@ import Setting from "./system/setting/Setting.js";
 import md5 from "./systemCallInterface/md5.js";
 import { Api } from "./systemCallInterface/QApi.js";
 import QFetch from "./systemCallInterface/QFetch.js";
+import devTest from "./devTest.js";
 
 class QuKie {
     constructor() {
@@ -45,6 +46,7 @@ class QuKie {
         this.appLogDissociation = 1;
     }
 }
+new devTest(); // 测试开发环境配置
 window.QLog = Log;
 window.QApi = Api;
 window.qukie = window._ = new QuKie();

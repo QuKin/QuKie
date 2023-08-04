@@ -8,21 +8,27 @@
  * @LastEditTime  2023-08-02 16:13:45
 */
 
-import { QSelect, QInsert } from '../../systemCallInterface/QStorage.js'
+import {QSelect, QInsert, QIsSelect} from '../../systemCallInterface/QStorage.js'
 import { getDateTime } from '../../systemCallInterface/QCommon.js'
 
 class Log {
     #name;
     constructor(app) {
-        this.init();
+        this.#init();
         if (typeof app === "undefined") {
             throw new Error('必须传入app对象')
         }
         this.#name = app.name;
     }
-    init() {
+    #init() {
         // 操作日志
         this.operatingLog = [];
+
+        if (QIsSelect(this.#name + '-operatingLog')) {
+            QInsert(this.#name + '-operatingLog', '[]');
+        }else{
+            this.operatingLog=JSON.parse(QSelect(this.#name + '-operatingLog').data);
+        }
     }
     /**
      * 添加日志
@@ -48,9 +54,6 @@ class Log {
      * @returns {QApi}
      */
     show() {
-        if (QSelect(this.#name + '-operatingLog').code === 404) {
-            QInsert(this.#name + '-operatingLog', '[]');
-        }
         this.operatingLog = JSON.parse(QSelect(this.#name + '-operatingLog').data);
         if (this.operatingLog.length === 0) {
             return QApi([], 'not found', 404);

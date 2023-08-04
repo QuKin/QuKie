@@ -18,7 +18,7 @@ import { Api } from './QApi.js';
  * @returns {Api}
  */
 export const QSelect = (key, Storage = localStorage, type = null) => {
-    if (Storage.getItem(key) == null) {
+    if (QIsSelect(key,Storage)) {
         return Api([], '没有值', 404);
     }
     switch (type) {
@@ -33,6 +33,17 @@ export const QSelect = (key, Storage = localStorage, type = null) => {
         default:
             return Api(Storage.getItem(key));
     }
+}
+
+/**
+ * 判断当前查询的是否为null，是为true
+ * @param {String} key 键名
+ * @param {Object} [Storage=localStorage] 存储类型
+ * @returns {boolean}
+ * @constructor
+ */
+export const QIsSelect=(key, Storage = localStorage) => {
+    return Storage.getItem(key)==null;
 }
 
 /**
