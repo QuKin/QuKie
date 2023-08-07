@@ -17,7 +17,6 @@
  * @param {Number} code 识别码
  * @param {Boolean} tf 是否控制台报错(只有≥300)
  * @returns {QApi}
- * @constructor
  */
 export const QAL = (dissociation, QLogType, QLogParticulars, data = [], message = 'success', code = 200,tf=false) => {
     if (qukie.logDissociation > dissociation) QLog.add(QLogType, QLogParticulars);

@@ -5,9 +5,21 @@
  * @description     ts测试
  * @Date            2023/8/4 15:43
  */
-function aaa(a:string|object):void {
-    console.log(a);
-}
-aaa({
-    asdf:aaa
-})
+// function aaa(a:string|object):void {
+//     console.log(a);
+// }
+// aaa({
+//     asdf:aaa
+// })
+// import {Api} from './kernel/systemCallInterface/QApi.js';
+// import {CodeE} from "./kernel/mode/codeE.js";
+//
+// Api([],'success',200);
+// Api([],'success',CodeE.Success);
+//
+// import {QAL} from "./kernel/systemCallInterface/_QCommon.js";
+// QAL(0,'aaa','bbb',[],'success',CodeE.Success,true);
+import PopUp from "./kernel/desktop/PopUp.js";
+let test:PopUp=new PopUp('aaa', {
+    body:'1'
+});

@@ -11,7 +11,6 @@ import Log from "./system/log/Log.js";
 import Setting from "./system/setting/Setting.js";
 import md5 from "./systemCallInterface/md5.js";
 import { Api } from "./systemCallInterface/QApi.js";
-import QFetch from "./systemCallInterface/QFetch.js";
 import devTest from "./devTest.js";
 
 class QuKie {
@@ -37,7 +36,6 @@ class QuKie {
     sysFun() {
         this.setting = Setting;
         this.md5 = md5;
-        this.QFetch = QFetch;
     }
     appVal() {
         // app每个最多日志数量
