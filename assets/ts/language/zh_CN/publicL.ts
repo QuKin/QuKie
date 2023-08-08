@@ -9,7 +9,7 @@
  */
 export enum publicL{
     NotFound='没有值',
-    Success='正常',
+    Success='成功',
     Error='错误',
     TypeError='类型错误',
     RangeError='范围错误',

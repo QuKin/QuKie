@@ -5,6 +5,7 @@
  * @description     私有的公共方法
  * @Date            2023/8/7 11:27
  */
+let publicL = null;
 /**
  * 封装QLog和QApi
  * @name QAL
@@ -17,7 +18,7 @@
  * @param {boolean} tf 是否控制台报错(只有≥300)
  * @returns {QApi}
  */
-export const QAL = (dissociation, QLogType, QLogParticulars, data = [], message = 'success', codes = window.CodeE.Success, tf = false) => {
+export const QAL = (dissociation, QLogType, QLogParticulars, data = [], message = publicL.Success, codes = window.CodeE.Success, tf = false) => {
     if (window.qukie.logDissociation >= dissociation)
         window.QLog.add(QLogType, QLogParticulars);
     if (tf && codes >= 300) {
@@ -34,4 +35,18 @@ export const QAL = (dissociation, QLogType, QLogParticulars, data = [], message 
 export const getConfig = (key) => {
     return JSON.parse(localStorage.getItem('Config'))[key];
 };
+export const setConfig = (key, value) => {
+    let data = JSON.parse(localStorage.getItem('Config'));
+    try {
+        data[key] = value;
+        localStorage.setItem('Config', JSON.stringify(data));
+    }
+    catch (e) {
+        return false;
+    }
+    return true;
+};
+await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
+    publicL = e.publicL;
+});
 //# sourceMappingURL=_QCommon.js.map

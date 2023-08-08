@@ -12,4 +12,6 @@ export const Config={
     Language:Language.zh_CN
 }
 
-localStorage.setItem('Config',JSON.stringify(Config))
+if (localStorage.getItem('Config')==null) {
+    localStorage.setItem('Config', JSON.stringify(Config))
+}

@@ -1,4 +1,3 @@
-/// <reference path="./global.d.ts" />
 /**
  * @name            main
  * @version         1.0
@@ -13,6 +12,8 @@ import { Api } from "./kernel/systemCallInterface/QApi.js";
 import { LogIntensityE } from "./kernel/mode/logIntensityE.js";
 import { Language } from "./language/language.js";
 import { typeE } from "./kernel/mode/typeE.js";
+import Setting from "./kernel/system/Setting.js";
+import md5 from "./kernel/systemCallInterface/Md5.js";
 class QuKie {
     _version;
     _debug;
@@ -39,8 +40,8 @@ class QuKie {
         this.language = Language.zh_CN;
     }
     sysFun() {
-        // this.setting = Setting;
-        // this.md5 = md5;
+        this.setting = Setting;
+        this.md5 = md5;
     }
     appVal() {
         // app每个最多日志数量
@@ -53,6 +54,8 @@ class QuKie {
     appLogDissociation;
     appLogLength;
     language;
+    md5;
+    setting;
 }
 new devTest(); // 测试开发环境配置
 window.QLog = Log;

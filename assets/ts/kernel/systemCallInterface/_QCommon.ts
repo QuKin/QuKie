@@ -7,8 +7,8 @@
  */
 
 import {QApi} from "./QApi.js";
-import {QSelect} from "./QStorage.js";
-import {typeE} from "../mode/typeE.js";
+
+let publicL=null;
 
 /**
  * 封装QLog和QApi
@@ -27,7 +27,7 @@ export const QAL = (
     QLogType:string,
     QLogParticulars:string,
     data:any = [],
-    message:string = 'success',
+    message:string = publicL.Success,
     codes:number = window.CodeE.Success,
     tf:boolean=false
 ):QApi => {
@@ -47,3 +47,18 @@ export const QAL = (
 export const getConfig=(key:string):object=>{
     return JSON.parse(localStorage.getItem('Config'))[key];
 }
+
+export const setConfig=(key:string,value:string):boolean=>{
+    let data:object=JSON.parse(localStorage.getItem('Config'));
+    try{
+        data[key]=value;
+        localStorage.setItem('Config',JSON.stringify(data));
+    }catch (e) {
+        return false;
+    }
+    return true;
+}
+
+await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
+    publicL=e.publicL;
+})

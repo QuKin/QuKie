@@ -11,6 +11,10 @@ let QApiL = null;
 await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QApiL.js").then(e => {
     QApiL = e.QApiL;
 });
+let publicL = null;
+await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
+    publicL = e.publicL;
+});
 /**
  * Api
  * @param {any} [data=[]] 数据
@@ -18,7 +22,7 @@ await import("../../language/" + getConfig('Language') + "/kernel/systemCallInte
  * @param {CodeE|number} [code=Code.Success] 识别码
  * @returns {QApi} api
  */
-export const Api = (data = [], message = 'success', code = CodeE.Success) => {
+export const Api = (data = [], message = publicL.Success, code = CodeE.Success) => {
     // 判断是否在Code里面
     if (Object.values(CodeE).includes(code)) {
         return {
