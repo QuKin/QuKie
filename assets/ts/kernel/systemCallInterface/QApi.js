@@ -6,7 +6,11 @@
  * @Date            2023/8/7 7:46
  */
 import { CodeE } from "../mode/codeE.js";
-import { QApiL } from "../../language/zh_CN/kernel/systemCallInterface/QApiL.js";
+import { getConfig } from "./_QCommon.js";
+let QApiL = null;
+await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QApiL.js").then(e => {
+    QApiL = e.QApiL;
+});
 /**
  * Api
  * @param {any} [data=[]] 数据

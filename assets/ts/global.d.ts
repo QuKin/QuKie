@@ -1,5 +1,5 @@
 /**
- * @name            global
+ * @file            global
  * @version         1.0
  * @author          QuKie <13606184008@163.com>
  * @description     全局的声明文件
@@ -12,6 +12,7 @@ declare interface Window {
     CodeE?:any,
     QLog?:any,
     QApi?:any,
+    typeE?:any,
     LogIntensityE?:any,
     _?:any,
 }

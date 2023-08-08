@@ -25,4 +25,13 @@ export const QAL = (dissociation, QLogType, QLogParticulars, data = [], message 
     }
     return window.QApi(data, message, codes);
 };
+/**
+ * 获取配置文件
+ * @name getConfig
+ * @param {string} key 配置名
+ * @returns {string}
+ */
+export const getConfig = (key) => {
+    return JSON.parse(localStorage.getItem('Config'))[key];
+};
 //# sourceMappingURL=_QCommon.js.map

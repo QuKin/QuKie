@@ -1,3 +1,4 @@
+import { getConfig } from "./_QCommon";
 /**
  * @name            QDB
  * @version         1.0
@@ -5,7 +6,10 @@
  * @description     indexedDB封装
  * @Date            2023/8/7 9:21
  */
-import { QDBL } from "../../language/zh_CN/kernel/systemCallInterface/QDBL.js";
+let QDBL = null;
+await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QDBL.js").then(e => {
+    QDBL = e.QApiL;
+});
 export default class QDB {
     dbName;
     dbVersion;

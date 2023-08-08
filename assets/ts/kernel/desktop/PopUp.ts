@@ -8,14 +8,14 @@
 
 import IPopUp from './interface/IPopUp'
 import QRange from "../systemCallInterface/QRange.js";
-import {QAL} from "../systemCallInterface/_QCommon.js";
+import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {QApi} from "../systemCallInterface/QApi.js";
 let PopUpL=null;
-await import("../../language/"+window.qukie.language+"/kernel/desktop/PopUpL.js").then(e=>{
+await import("../../language/"+getConfig('Language')+"/kernel/desktop/PopUpL.js").then(e=>{
     PopUpL=e.PopUpL;
 })
 let publicL=null;
-await import("../../language/"+window.qukie.language+"/publicL.js").then(e=>{
+await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
     publicL=e.publicL;
 })
 
@@ -81,7 +81,7 @@ export default class PopUp implements IPopUp{
     setRange(range:string):QApi{
         if (this.qrange.is(range)){
             this.range=range;
-            return QAL(window.LogIntensityE.SuccessError,PopUpL.type, '设置系统弹窗范围类型成功',this.range)
+            return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setRangeSuccess,this.range)
         }else{
             return QAL(window.LogIntensityE.Error,PopUpL.type, PopUpL.rangeError,[],PopUpL.rangeErrorOnlySupported+':'+this.qrange.show(), window.CodeE.rangeError)
         }
@@ -92,7 +92,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getRange(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, '获取系统弹窗范围类型成功',this.range)
+        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getRangeSuccess,this.range)
     }
 
     /**
@@ -100,7 +100,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getTypeColor(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, '获取系统弹窗颜色类型成功',this.css)
+        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getTypeColorSuccess,this.css)
     }
 
     /**
@@ -175,7 +175,7 @@ export default class PopUp implements IPopUp{
                             break;
                         case 3:this.css=typeColor;break;
                         default:
-                            return QAL(window.LogIntensityE.Error,PopUpL.type, 'border参数错误',[], 'border参数错误，border参数只能一个颜色，或者三个整体参数：1px solid red', 504)
+                            return QAL(window.LogIntensityE.Error,PopUpL.type, PopUpL.setTypeColorError,[], 'border参数错误，border参数只能一个颜色，或者三个整体参数：1px solid red', 504)
                     }
                 }else{
                     this.css={
@@ -186,7 +186,7 @@ export default class PopUp implements IPopUp{
                 }
                 break;
         }
-        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, '设置系统弹窗颜色类型成功',this.css)
+        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setTypeColorSuccess,this.css)
     }
 
     /**
@@ -194,7 +194,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getTitle(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, '获取系统弹窗标题成功',this.title)
+        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getTitleSuccess,this.title)
     }
 
     /**
@@ -204,7 +204,7 @@ export default class PopUp implements IPopUp{
      */
     setTitle(title: string): QApi {
         this.title=title;
-        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, '设置系统弹窗标题成功',this.title)
+        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setTitleSuccess,this.title)
     }
 
     /**
@@ -212,7 +212,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getOptions(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, '获取系统弹窗参数成功',this.options)
+        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getOptionsSuccess,this.options)
     }
 
     /**
@@ -225,6 +225,20 @@ export default class PopUp implements IPopUp{
      */
     setOptions(options:{body?:string,icon?:string}): QApi {
         this.options=options;
-        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, '设置系统弹窗参数成功',this.options)
+        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setOptionsSuccess,this.options)
+    }
+
+    /**
+     * 展示弹窗
+     */
+    show():void{
+
+    }
+
+    /**
+     * 关闭弹窗
+     */
+    close():void{
+
     }
 }

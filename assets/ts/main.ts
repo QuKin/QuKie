@@ -15,6 +15,7 @@ import Log from "./kernel/systemCallInterface/Log.js";
 import {Api} from "./kernel/systemCallInterface/QApi.js";
 import {LogIntensityE} from "./kernel/mode/logIntensityE.js";
 import {Language} from "./language/language.js";
+import {typeE} from "./kernel/mode/typeE.js";
 
 class QuKie implements ISysVal,IAppVal{
     _version:string;
@@ -22,6 +23,7 @@ class QuKie implements ISysVal,IAppVal{
 
     constructor() {
         this.init();
+        console.log(2);
     }
     init(){
         this._version = '0.0.1';
@@ -62,5 +64,6 @@ new devTest(); // 测试开发环境配置
 window.QLog = Log;
 window.QApi = Api;
 window.CodeE=CodeE;
+window.typeE=typeE;
 window.LogIntensityE=LogIntensityE;
 window.qukie = window._ = new QuKie();

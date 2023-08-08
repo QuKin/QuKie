@@ -17,4 +17,6 @@ export default interface IPopUp{
     getTitle():QApi;
     getOptions(): QApi;
     setOptions(options:{body?:string,icon?:string}): QApi;
+    show():void;
+    close():void;
 }

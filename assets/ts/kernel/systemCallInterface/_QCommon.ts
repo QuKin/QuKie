@@ -7,6 +7,8 @@
  */
 
 import {QApi} from "./QApi.js";
+import {QSelect} from "./QStorage.js";
+import {typeE} from "../mode/typeE.js";
 
 /**
  * 封装QLog和QApi
@@ -34,4 +36,14 @@ export const QAL = (
         throw new Error(message);
     }
     return window.QApi(data, message, codes);
+}
+
+/**
+ * 获取配置文件
+ * @name getConfig
+ * @param {string} key 配置名
+ * @returns {string}
+ */
+export const getConfig=(key:string):object=>{
+    return JSON.parse(localStorage.getItem('Config'))[key];
 }

@@ -7,19 +7,16 @@
  */
 
 import { QApi,Api } from './QApi.js';
-import {CodeE} from "../mode/codeE";
+import {CodeE} from "../mode/codeE.js";
+import {typeE} from "../mode/typeE.js";
+import {getConfig} from "./_QCommon.js";
+
 let publicL=null;
-await import("../../language/"+window.qukie.language+"/publicL.js").then(e=>{
+// await import("../../language/"+window.qukie.language+"/publicL.js").then(e=>{
+await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
     publicL=e.publicL;
 })
 
-enum typeE {
-    int,
-    float,
-    json,
-    date,
-    null
-}
 
 /**
  * 查询指定数据

@@ -1,3 +1,4 @@
+import { getConfig } from "./_QCommon";
 /**
  * @name            QJson
  * @version         1.0
@@ -5,7 +6,10 @@
  * @description     description
  * @Date            2023/8/7 9:33
  */
-import { QJsonL } from "../../language/zh_CN/kernel/systemCallInterface/QJsonL.js";
+let QJsonL = null;
+await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QJsonL.js").then(e => {
+    QJsonL = e.QApiL;
+});
 export default class QJson {
     data;
     whereTF;
