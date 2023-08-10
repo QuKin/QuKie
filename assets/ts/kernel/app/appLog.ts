@@ -8,12 +8,15 @@
  */
 import Log from "../systemCallInterface/Log.js";
 import {QInsert, QIsSelect, QSelect} from "../systemCallInterface/QStorage.js";
-import {getDateTime} from "../systemCallInterface/QCommon.js";
 import {Api, QApi} from "../systemCallInterface/QApi.js";
-import {publicL} from "../../language/zh_CN/publicL.js";
+import {getConfig} from "../systemCallInterface/_QCommon.js";
+let publicL=null;
+await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
+    publicL=e.publicL;
+})
 
 export default class AppLog extends Log{
-    private appName:string;
+    private readonly appName:string;
     constructor(appName) {
         super();
         this.appName=appName;
@@ -35,14 +38,7 @@ export default class AppLog extends Log{
      * @param {string} particulars 详情
      */
     add(type:string, particulars:string):void {
-        this.operatingLog.unshift({
-            username: QSelect('username').data,
-            typeOfOperation: type,
-            particulars: particulars,
-            time: getDateTime().data,
-            addr: window.ipJson.addr,
-            ip: window.ipJson.ip
-        });
+        this.operatingLogUnshift(type,particulars);
         if (this.operatingLog.length > window.qukie.appLogLength) {
             this.operatingLog.pop();
         }

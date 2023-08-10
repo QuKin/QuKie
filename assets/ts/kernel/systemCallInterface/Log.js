@@ -34,18 +34,35 @@ export default class Log {
      * @param {string} particulars 详情
      */
     add(type, particulars) {
-        this.operatingLog.unshift({
-            username: QSelect('username').data,
-            typeOfOperation: type,
-            particulars: particulars,
-            time: getDateTime().data,
-            addr: window.ipJson.addr,
-            ip: window.ipJson.ip
-        });
+        this.operatingLogUnshift(type, particulars);
         if (this.operatingLog.length > window.qukie.logLength) {
             this.operatingLog.pop();
         }
         QInsert('operatingLog', JSON.stringify(this.operatingLog));
+    }
+    /**
+     * 日志添加
+     * @name operatingLogUnshift
+     * @param {string} type 操作类型
+     * @param {string} particulars 详情
+     * @protected
+     * @returns {boolean}
+     */
+    operatingLogUnshift(type, particulars) {
+        try {
+            this.operatingLog.unshift({
+                username: QSelect('username').data,
+                typeOfOperation: type,
+                particulars: particulars,
+                time: getDateTime().data,
+                addr: window.ipJson.addr,
+                ip: window.ipJson.ip
+            });
+        }
+        catch (e) {
+            return false;
+        }
+        return false;
     }
     /**
      * 展示所有日志
