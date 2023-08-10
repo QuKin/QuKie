@@ -1,4 +1,3 @@
-/// <reference path="../../global.d.ts" />
 /**
  * @name            Log
  * @version         1.0
@@ -9,11 +8,13 @@
 import { QSelect, QInsert, QIsSelect } from "./QStorage.js";
 import { getDateTime } from "./QCommon.js";
 import { Api } from './QApi.js';
+import { getConfig } from "./_QCommon.js";
 let publicL = null;
-await import("../../language/" + window.qukie.language + "/publicL.js").then(e => {
+await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
     publicL = e.publicL;
 });
-class Log {
+export default class Log {
+    operatingLog;
     constructor() {
         this.init();
     }
@@ -66,7 +67,6 @@ class Log {
         QInsert('operatingLog', '[]');
         return Api(this.operatingLog);
     }
-    operatingLog;
 }
-export default new Log();
+// export default new Log();
 //# sourceMappingURL=Log.js.map

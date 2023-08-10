@@ -9,7 +9,11 @@
 import {Language} from "../language/language.js";
 
 export const Config={
-    Language:Language.zh_CN
+    Language:Language.zh_CN,
+    logLength: 300,
+    logDissociation:2,
+    appLogLength:50,
+    appLogDissociation:1,
 }
 
 if (localStorage.getItem('Config')==null) {

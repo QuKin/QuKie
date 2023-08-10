@@ -5,6 +5,7 @@
  * @description     私有的公共方法
  * @Date            2023/8/7 11:27
  */
+import { typeE } from "../mode/typeE.js";
 let publicL = null;
 /**
  * 封装QLog和QApi
@@ -30,11 +31,29 @@ export const QAL = (dissociation, QLogType, QLogParticulars, data = [], message 
  * 获取配置文件
  * @name getConfig
  * @param {string} key 配置名
- * @returns {string}
+ * @param {typeE} [type=typeE.json] 返回的类型（int：数字； float：浮点数； json：json格式； date：时间）
+ * @returns {any}
  */
-export const getConfig = (key) => {
-    return JSON.parse(localStorage.getItem('Config'))[key];
+export const getConfig = (key, type = typeE.json) => {
+    let data = JSON.parse(localStorage.getItem('Config'))[key];
+    switch (type) {
+        case typeE.int:
+            return parseInt(data);
+        case typeE.float:
+            return parseFloat(data);
+        case typeE.date:
+            return new Date(data);
+        default:
+            return data;
+    }
 };
+/**
+ * 修改配置文件
+ * @name setConfig
+ * @param {string} key 键名
+ * @param {string} value 值
+ * @returns {boolean}
+ */
 export const setConfig = (key, value) => {
     let data = JSON.parse(localStorage.getItem('Config'));
     try {

@@ -10,16 +10,14 @@ import { CodeE } from "./kernel/mode/codeE.js";
 import Log from "./kernel/systemCallInterface/Log.js";
 import { Api } from "./kernel/systemCallInterface/QApi.js";
 import { LogIntensityE } from "./kernel/mode/logIntensityE.js";
-import { Language } from "./language/language.js";
 import { typeE } from "./kernel/mode/typeE.js";
-import Setting from "./kernel/system/Setting.js";
 import md5 from "./kernel/systemCallInterface/Md5.js";
+import { getConfig } from "./kernel/systemCallInterface/_QCommon.js";
 class QuKie {
     _version;
     _debug;
     constructor() {
         this.init();
-        console.log(2);
     }
     init() {
         this._version = '0.0.1';
@@ -33,21 +31,20 @@ class QuKie {
     }
     sysVal() {
         // 系统最多日志数量
-        this.logLength = 300;
+        this.logLength = getConfig('logLength', typeE.int);
         // 系统强度，0：不记录；1：只记录失败；2：只记录修改成功和失败；3：记录所有包括获取成功
-        this.logDissociation = 2;
+        this.logDissociation = getConfig('logDissociation', typeE.int);
         // 语言
-        this.language = Language.zh_CN;
+        this.language = getConfig('Language');
     }
     sysFun() {
-        this.setting = Setting;
         this.md5 = md5;
     }
     appVal() {
         // app每个最多日志数量
-        this.appLogLength = 50;
+        this.appLogLength = getConfig('appLogLength', typeE.int);
         // app强度，0：不记录；1：只记录失败；2：只记录修改成功和失败；3：记录所有包括获取成功
-        this.appLogDissociation = 1;
+        this.appLogDissociation = getConfig('appLogDissociation', typeE.int);
     }
     logDissociation;
     logLength;
@@ -55,10 +52,9 @@ class QuKie {
     appLogLength;
     language;
     md5;
-    setting;
 }
 new devTest(); // 测试开发环境配置
-window.QLog = Log;
+window.QLog = new Log();
 window.QApi = Api;
 window.CodeE = CodeE;
 window.typeE = typeE;

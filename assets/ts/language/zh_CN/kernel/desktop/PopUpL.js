@@ -9,7 +9,6 @@
 export var PopUpL;
 (function (PopUpL) {
     PopUpL["type"] = "\u7CFB\u7EDF\u5F39\u7A97";
-    PopUpL["rangeError"] = "\u8303\u56F4\u9519\u8BEF";
     PopUpL["rangeErrorOnlySupported"] = "\u8303\u56F4\u9519\u8BEF\uFF0C\u53EA\u652F\u6301";
     PopUpL["setRangeSuccess"] = "\u8BBE\u7F6E\u7CFB\u7EDF\u5F39\u7A97\u8303\u56F4\u7C7B\u578B\u6210\u529F";
     PopUpL["getRangeSuccess"] = "\u83B7\u53D6\u7CFB\u7EDF\u5F39\u7A97\u8303\u56F4\u7C7B\u578B\u6210\u529F";

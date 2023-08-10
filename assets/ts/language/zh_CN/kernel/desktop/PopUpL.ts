@@ -8,7 +8,6 @@
  */
 export enum PopUpL{
     type='系统弹窗',
-    rangeError='范围错误',
     rangeErrorOnlySupported='范围错误，只支持',
     setRangeSuccess='设置系统弹窗范围类型成功',
     getRangeSuccess='获取系统弹窗范围类型成功',

@@ -23,7 +23,7 @@ await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
  * @name QSelect
  * @param {string} key 键名
  * @param {Storage} [Storage=localStorage] 存储类型
- * @param {typeE} [type] 返回的类型（int：数字； float：浮点数； json：json格式； date：时间； null：默认不处理）
+ * @param {typeE} [type=typeE.null] 返回的类型（int：数字； float：浮点数； json：json格式； date：时间； null：默认不处理）
  * @returns {QApi}
  */
 export const QSelect = (key:string, Storage:Storage = localStorage, type:typeE = typeE.null):QApi => {

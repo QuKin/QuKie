@@ -8,6 +8,5 @@
  */
 
 export interface ISysFun{
-    setting:any;
     md5:any;
 }

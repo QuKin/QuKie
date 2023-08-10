@@ -19,7 +19,9 @@
 //
 // import {QAL} from "./kernel/systemCallInterface/_QCommon.js";
 // QAL(0,'aaa','bbb',[],'success',CodeE.Success,true);
-import PopUp from "./kernel/desktop/PopUp.js";
-let test:PopUp=new PopUp('aaa', {
-    body:'1'
-});
+// import PopUp from "./kernel/desktop/PopUp.js";
+// setTimeout(()=>{
+//     let test:PopUp=new PopUp('aaa', {
+//         body:'1'
+//     });
+// },2000)

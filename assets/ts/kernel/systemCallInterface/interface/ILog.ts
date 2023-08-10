@@ -9,7 +9,6 @@
 import {QApi} from "../QApi.js";
 
 export interface ILog{
-    operatingLog:any[];
     add(type:string, particulars:string):void;
     show():QApi;
     clear():QApi;

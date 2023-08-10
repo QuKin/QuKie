@@ -83,7 +83,7 @@ export default class PopUp implements IPopUp{
             this.range=range;
             return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setRangeSuccess,this.range)
         }else{
-            return QAL(window.LogIntensityE.Error,PopUpL.type, PopUpL.rangeError,[],PopUpL.rangeErrorOnlySupported+':'+this.qrange.show(), window.CodeE.rangeError)
+            return QAL(window.LogIntensityE.Error,PopUpL.type, publicL.RangeError,[],PopUpL.rangeErrorOnlySupported+':'+this.qrange.show(), window.CodeE.RangeError)
         }
     }
 
