@@ -8,11 +8,11 @@
 
 declare interface Window {
     ipJson?: any,
-    qukie?:any,
-    CodeE?:any,
-    QLog?:any,
-    QApi?:any,
-    typeE?:any,
-    LogIntensityE?:any,
-    _?:any,
+    qukie?: any,
+    CodeE?: any,
+    QLog?: any,
+    QApi?: any,
+    typeE?: any,
+    LogIntensityE?: any,
+    _?: any,
 }

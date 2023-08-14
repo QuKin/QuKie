@@ -8,8 +8,23 @@
 
 import {QApi} from "../QApi.js";
 
-export interface ILog{
-    add(type:string, particulars:string):void;
-    show():QApi;
-    clear():QApi;
+export interface ILog {
+    /**
+     * 添加日志
+     * @param {string} type 操作类型
+     * @param {string} particulars 详情
+     */
+    add(type: string, particulars: string): void;
+
+    /**
+     * 展示所有日志
+     * @returns {QApi}
+     */
+    show(): QApi;
+
+    /**
+     * 清楚所有日志
+     * @returns {QApi}
+     */
+    clear(): QApi;
 }

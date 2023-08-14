@@ -5,6 +5,6 @@
  * @description     QApi语言
  * @Date            2023/8/7 9:15
  */
-export enum QApiL{
-    FailedToSetCodeParameter='code参数设置失败'
+export enum QApiL {
+    FailedToSetCodeParameter = 'code参数设置失败'
 }

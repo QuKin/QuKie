@@ -8,7 +8,7 @@
 
 import IQAjax from "./interface/IQAjax.js";
 
-export default class QAjax implements IQAjax{
+export default class QAjax implements IQAjax {
     method: string;
     url: string;
     data: object | null | string;
@@ -34,20 +34,20 @@ export default class QAjax implements IQAjax{
                     error = null,
                     async = true
                 }: {
-            success: Function,
-            method?: string,
-            url?: string,
-            data?: object,
-            error?: Function,
-            async?: boolean
-        }) {
-        this.method=method;
-        this.url=url;
-        this.data=null;
-        if (data!=null) this.data=this.params(data);
-        this.success=success;
-        this.error=error;
-        this.async=async;
+        success: Function,
+        method?: string,
+        url?: string,
+        data?: object,
+        error?: Function,
+        async?: boolean
+    }) {
+        this.method = method;
+        this.url = url;
+        this.data = null;
+        if (data != null) this.data = this.params(data);
+        this.success = success;
+        this.error = error;
+        this.async = async;
 
         this.QAjaxs = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
@@ -67,23 +67,22 @@ export default class QAjax implements IQAjax{
             this.QAjaxs.open(this.method, this.url + '?' + this.data, this.async);
             this.QAjaxs.send(null);
         } else if (this.method === 'POST' || this.method === 'PUT') {
-            /**
-             *打开请求
-             * */
+            // 打开请求
             this.QAjaxs.open(this.method, this.url, this.async);
-            /**
-             * POST请求设置请求头
-             * */
+            // POST请求设置请求头
             this.QAjaxs.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            /**
-             * 发送请求参数
-             */
+            // 发送请求参数
             this.QAjaxs.send(this.data);
         }
 
     }
 
-    params(data): string {
+    /**
+     * 对象转字符串
+     * @param {object} data 数据
+     * @returns {string}
+     */
+    params(data: object): string {
         let arr: string[] = [];
         for (let i in data) {
             /*

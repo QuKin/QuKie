@@ -20,13 +20,13 @@
  *      503：范围错误
  *      504：参数错误
  */
-export enum CodeE{
-    Success=200,
+export enum CodeE {
+    Success = 200,
 
-    NotFound=404,
+    NotFound = 404,
 
-    Error=501,
-    TypeError=502,
-    RangeError=503,
-    ParametricError=504,
+    Error = 501,
+    TypeError = 502,
+    RangeError = 503,
+    ParametricError = 504,
 }

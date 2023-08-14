@@ -10,14 +10,16 @@
 import appLog from './appLog.js';
 import {IApp} from "./interface/IApp.js";
 
-export default class App{
+export default class App {
     private app: IApp;
-    private log:appLog;
-    constructor(app:IApp) {
+    private log: appLog;
+
+    constructor(app: IApp) {
         this.init(app);
     }
-    private init(app:IApp){
-        this.app=app;
-        this.log=new appLog(this.app.name);
+
+    private init(app: IApp) {
+        this.app = app;
+        this.log = new appLog(this.app.name);
     }
 }

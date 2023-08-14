@@ -6,7 +6,7 @@
  * @description     Font字体语言
  * @Date            2023/8/9 9:41
  */
-export enum FontL{
-    type='系统字体',
-    showSuccess='获取系统全部字体成功',
+export enum FontL {
+    type = '系统字体',
+    showSuccess = '获取系统全部字体成功',
 }

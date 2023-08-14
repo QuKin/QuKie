@@ -5,6 +5,6 @@
  * @description     QJson语言
  * @Date            2023/8/7 9:43
  */
-export enum QJsonL{
-    nodeInOrderToImportJson='请使用node版本才能导入json文件'
+export enum QJsonL {
+    nodeInOrderToImportJson = '请使用node版本才能导入json文件'
 }

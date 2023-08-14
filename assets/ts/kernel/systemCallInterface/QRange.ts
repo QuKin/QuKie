@@ -8,15 +8,38 @@
 
 import IQRange from "./interface/IQRange.js";
 
-export default class QRange implements IQRange{
-    arr:any[]
+export default class QRange implements IQRange {
+    // 存放范围
+    arr: any[]
+
     constructor(...arr) {
+        this.init(arr);
+    }
+
+    /**
+     * 初始化定义
+     * @param {any[]} arr 范围
+     * @private
+     */
+    private init(arr){
         this.arr=arr;
     }
-    is(num:any):boolean{
-        return this.arr.indexOf(num)!==-1;
+
+    /**
+     * 判断当前里面是否有num的值
+     * @param {any} num
+     * @returns {boolean}
+     */
+    is(num: any): boolean {
+        return this.arr.indexOf(num) !== -1;
     }
-    show(join:string=','):string{
+
+    /**
+     * 展示所有范围数据
+     * @param {string} join 使用什么符号进行分割
+     * @returns {boolean}
+     */
+    show(join: string = ','): string {
         return this.arr.join(join);
     }
 }

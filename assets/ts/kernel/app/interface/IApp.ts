@@ -7,7 +7,7 @@
  * @Date            2023/8/9 11:13
  */
 export interface IApp {
-    name?:string,
-    ico?:string,
-    file?:string
+    name?: string,
+    ico?: string,
+    file?: string
 }

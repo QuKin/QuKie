@@ -8,15 +8,15 @@ import {getConfig} from "./_QCommon";
  * @Date            2023/8/7 9:33
  */
 
-let QJsonL=null;
-await import("../../language/"+getConfig('Language')+"/kernel/systemCallInterface/QJsonL.js").then(e=>{
-    QJsonL=e.QApiL;
+let QJsonL = null;
+await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QJsonL.js").then(e => {
+    QJsonL = e.QApiL;
 })
 
 export default class QJson {
-    data:any[];
-    whereTF:boolean;
-    json:any[];
+    data: any[];
+    whereTF: boolean;
+    json: any[];
 
     /**
      * 构造函数
@@ -253,14 +253,22 @@ export default class QJson {
                  */
                 this.data = arr.filter((item) => {
                     switch (obj2) {
-                        case '===': return item[obj1] === obj3;
-                        case '<': return item[obj1] < obj3;
-                        case '>': return item[obj1] > obj3;
-                        case '<=': return item[obj1] <= obj3;
-                        case '>=': return item[obj1] >= obj3;
-                        case '!=': return item[obj1] != obj3;
-                        case '!==': return item[obj1] !== obj3;
-                        default: return item[obj1] == obj3;
+                        case '===':
+                            return item[obj1] === obj3;
+                        case '<':
+                            return item[obj1] < obj3;
+                        case '>':
+                            return item[obj1] > obj3;
+                        case '<=':
+                            return item[obj1] <= obj3;
+                        case '>=':
+                            return item[obj1] >= obj3;
+                        case '!=':
+                            return item[obj1] != obj3;
+                        case '!==':
+                            return item[obj1] !== obj3;
+                        default:
+                            return item[obj1] == obj3;
                     }
                 });
                 break;
@@ -309,14 +317,22 @@ export default class QJson {
 
         this.data = arr.filter((item) => {
             switch (symbol) {
-                case '===': return item[key] === value;
-                case '<': return item[key] < value;
-                case '>': return item[key] > value;
-                case '<=': return item[key] <= value;
-                case '>=': return item[key] >= value;
-                case '!=': return item[key] != value;
-                case '!==': return item[key] !== value;
-                default: return item[key] == value;
+                case '===':
+                    return item[key] === value;
+                case '<':
+                    return item[key] < value;
+                case '>':
+                    return item[key] > value;
+                case '<=':
+                    return item[key] <= value;
+                case '>=':
+                    return item[key] >= value;
+                case '!=':
+                    return item[key] != value;
+                case '!==':
+                    return item[key] !== value;
+                default:
+                    return item[key] == value;
             }
         });
         return this;
@@ -553,7 +569,7 @@ export default class QJson {
         const file = self.files[0];
         // !!是一个js的语法，表示后面的变量不是null/undefined/空串，实用写法。
         if (!!file) {
-            let _this=this;
+            let _this = this;
             // 实例化一个FileReader对象
             const reader = new FileReader();
             // 借助 FileReader 的方法，按照文本格式读入文件，第二个参数是编码方式（可空）
@@ -572,7 +588,7 @@ export default class QJson {
      * @param {String} filename 文件名
      */
     domExport(filename = 'json') {
-        let data:any;
+        let data: any;
         if (!this.whereTF) data = this.json;
         else data = this.data;
 
@@ -584,7 +600,7 @@ export default class QJson {
             data = JSON.stringify(data, undefined, 4);
         }
         // 要创建一个 blob 数据
-        let blob = new Blob([data], { type: "text/json" }),
+        let blob = new Blob([data], {type: "text/json"}),
             a = document.createElement("a");
         a.download = filename + '.json';
 
@@ -767,7 +783,7 @@ export default class QJson {
      * @param {String|Array} key 共同的key值
      * @returns {this} this
      */
-    fullJoin(json, key):this {
+    fullJoin(json, key): this {
         this.whereTF = true;
         this.data = [];
 
@@ -800,7 +816,7 @@ export default class QJson {
      *
      * 用途：where从头开始和清除data缓存
      */
-    clear():this {
+    clear(): this {
         this.whereTF = false;
         this.data = [];
 
@@ -811,7 +827,7 @@ export default class QJson {
      * 关闭
      * @returns true
      */
-    close():boolean {
+    close(): boolean {
         this.json = [];
         this.data = [];
         this.whereTF = false;

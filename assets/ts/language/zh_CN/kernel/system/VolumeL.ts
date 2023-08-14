@@ -6,9 +6,9 @@
  * @description     Volume语言
  * @Date            2023/8/8 9:23
  */
-export enum VolumeL{
-    type='系统音量',
-    setSuccess='系统音量调整成功',
-    setError='系统音量调整失败',
-    getSuccess='获取系统音量成功',
+export enum VolumeL {
+    type = '系统音量',
+    setSuccess = '系统音量调整成功',
+    setError = '系统音量调整失败',
+    getSuccess = '获取系统音量成功',
 }

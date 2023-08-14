@@ -6,15 +6,13 @@
  * @Date            2023/8/7 10:19
  */
 
-import { QApi,Api } from './QApi.js';
-import {CodeE} from "../mode/codeE.js";
+import {QApi, Api} from './QApi.js';
 import {typeE} from "../mode/typeE.js";
 import {getConfig} from "./_QCommon.js";
 
-let publicL=null;
-// await import("../../language/"+window.qukie.language+"/publicL.js").then(e=>{
-await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
-    publicL=e.publicL;
+let publicL = null;
+await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
+    publicL = e.publicL;
 })
 
 
@@ -26,8 +24,8 @@ await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
  * @param {typeE} [type=typeE.null] 返回的类型（int：数字； float：浮点数； json：json格式； date：时间； null：默认不处理）
  * @returns {QApi}
  */
-export const QSelect = (key:string, Storage:Storage = localStorage, type:typeE = typeE.null):QApi => {
-    if (QIsSelect(key,Storage)) {
+export const QSelect = (key: string, Storage: Storage = localStorage, type: typeE = typeE.null): QApi => {
+    if (QIsSelect(key, Storage)) {
         return Api([], publicL.NotFound, window.CodeE.NotFound);
     }
     switch (type) {
@@ -52,8 +50,8 @@ export const QSelect = (key:string, Storage:Storage = localStorage, type:typeE =
  * @returns {boolean}
  * @constructor
  */
-export const QIsSelect=(key:string, Storage:Storage = localStorage):boolean => {
-    return Storage.getItem(key)==null;
+export const QIsSelect = (key: string, Storage: Storage = localStorage): boolean => {
+    return Storage.getItem(key) == null;
 }
 
 /**
@@ -62,13 +60,13 @@ export const QIsSelect=(key:string, Storage:Storage = localStorage):boolean => {
  * @param {Storage} [Storage=localStorage] 存储类型
  * @returns {QApi}
  */
-export const QSelectAll = (Storage:Storage = localStorage):QApi => {
+export const QSelectAll = (Storage: Storage = localStorage): QApi => {
     let data = [];
     let len = Storage.length;
     for (let i = 0; i < len; i++) {
         let getKey = Storage.key(i);
         let getVal = Storage.getItem(getKey);
-        data.push({ key: getKey, value: getVal })
+        data.push({key: getKey, value: getVal})
     }
     return Api(data);
 }
@@ -81,9 +79,9 @@ export const QSelectAll = (Storage:Storage = localStorage):QApi => {
  * @param {Storage} [Storage=localStorage] 存储类型
  * @returns {QApi}
  */
-export const QInsert = (key:string, value:string, Storage:Storage = localStorage):QApi => {
+export const QInsert = (key: string, value: string, Storage: Storage = localStorage): QApi => {
     Storage.setItem(key, value);
-    return Api({ key, value })
+    return Api({key, value})
 }
 
 /**
@@ -93,7 +91,7 @@ export const QInsert = (key:string, value:string, Storage:Storage = localStorage
  * @param {Storage} [Storage=localStorage] 存储类型
  * @returns {QApi}
  */
-export const QDel = (key:string, Storage:Storage = localStorage):QApi => {
+export const QDel = (key: string, Storage: Storage = localStorage): QApi => {
     let cval = QSelect(key)
     if (cval.code === 200) {
         Storage.removeItem(key)
@@ -109,7 +107,7 @@ export const QDel = (key:string, Storage:Storage = localStorage):QApi => {
  * @param {Storage} [Storage=localStorage] 存储类型
  * @returns {QApi}
  */
-export const QDelAll = (Storage:Storage = localStorage):QApi => {
+export const QDelAll = (Storage: Storage = localStorage): QApi => {
     Storage.clear();
     return Api();
 }

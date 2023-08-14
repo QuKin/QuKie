@@ -6,6 +6,7 @@
  * @Date            2023/8/7 9:48
  */
 export default interface IQRange{
+    // 存放范围
     arr:any[];
 
     /**

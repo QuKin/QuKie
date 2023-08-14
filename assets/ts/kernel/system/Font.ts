@@ -12,22 +12,25 @@ import {FontConfig} from "../../../font/fontConfig.js";
 import {QAL} from "../systemCallInterface/_QCommon.js";
 import {FontL} from "../../language/zh_CN/kernel/system/FontL.js";
 
-export default class Font{
-    private fonts=[];
+export default class Font {
+    private fonts = [];
     private font;
+
     constructor() {
         this.init();
     }
-    private init(){
+
+    private init() {
 
     }
+
     // add(font:FontConfig):QApi{
     //
     // }
     // option(font:FontConfig):QApi{
     //
     // }
-    show():QApi{
-        return QAL(window.LogIntensityE.All,FontL.type,FontL.showSuccess,this.fonts);
+    show(): QApi {
+        return QAL(window.LogIntensityE.All, FontL.type, FontL.showSuccess, this.fonts);
     }
 }

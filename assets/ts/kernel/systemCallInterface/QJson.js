@@ -255,14 +255,22 @@ export default class QJson {
                  */
                 this.data = arr.filter((item) => {
                     switch (obj2) {
-                        case '===': return item[obj1] === obj3;
-                        case '<': return item[obj1] < obj3;
-                        case '>': return item[obj1] > obj3;
-                        case '<=': return item[obj1] <= obj3;
-                        case '>=': return item[obj1] >= obj3;
-                        case '!=': return item[obj1] != obj3;
-                        case '!==': return item[obj1] !== obj3;
-                        default: return item[obj1] == obj3;
+                        case '===':
+                            return item[obj1] === obj3;
+                        case '<':
+                            return item[obj1] < obj3;
+                        case '>':
+                            return item[obj1] > obj3;
+                        case '<=':
+                            return item[obj1] <= obj3;
+                        case '>=':
+                            return item[obj1] >= obj3;
+                        case '!=':
+                            return item[obj1] != obj3;
+                        case '!==':
+                            return item[obj1] !== obj3;
+                        default:
+                            return item[obj1] == obj3;
                     }
                 });
                 break;
@@ -311,14 +319,22 @@ export default class QJson {
             arr = this.data;
         this.data = arr.filter((item) => {
             switch (symbol) {
-                case '===': return item[key] === value;
-                case '<': return item[key] < value;
-                case '>': return item[key] > value;
-                case '<=': return item[key] <= value;
-                case '>=': return item[key] >= value;
-                case '!=': return item[key] != value;
-                case '!==': return item[key] !== value;
-                default: return item[key] == value;
+                case '===':
+                    return item[key] === value;
+                case '<':
+                    return item[key] < value;
+                case '>':
+                    return item[key] > value;
+                case '<=':
+                    return item[key] <= value;
+                case '>=':
+                    return item[key] >= value;
+                case '!=':
+                    return item[key] != value;
+                case '!==':
+                    return item[key] !== value;
+                default:
+                    return item[key] == value;
             }
         });
         return this;

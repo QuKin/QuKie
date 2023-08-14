@@ -9,7 +9,7 @@
 import {Api, QApi} from "./QApi.js";
 import {typeE} from "../mode/typeE.js";
 
-let publicL=null;
+let publicL = null;
 
 /**
  * 封装QLog和QApi
@@ -24,16 +24,16 @@ let publicL=null;
  * @returns {QApi}
  */
 export const QAL = (
-    dissociation:number,
-    QLogType:string,
-    QLogParticulars:string,
-    data:any = [],
-    message:string = publicL.Success,
-    codes:number = window.CodeE.Success,
-    tf:boolean=false
-):QApi => {
+    dissociation: number,
+    QLogType: string,
+    QLogParticulars: string,
+    data: any = [],
+    message: string = publicL.Success,
+    codes: number = window.CodeE.Success,
+    tf: boolean = false
+): QApi => {
     if (window.qukie.logDissociation >= dissociation) window.QLog.add(QLogType, QLogParticulars);
-    if (tf && codes>=300){
+    if (tf && codes >= 300) {
         throw new Error(message);
     }
     return window.QApi(data, message, codes);
@@ -46,8 +46,8 @@ export const QAL = (
  * @param {typeE} [type=typeE.json] 返回的类型（int：数字； float：浮点数； json：json格式； date：时间）
  * @returns {any}
  */
-export const getConfig=(key:string,type:typeE = typeE.json):any=>{
-    let data:any=JSON.parse(localStorage.getItem('Config'))[key];
+export const getConfig = (key: string, type: typeE = typeE.json): any => {
+    let data: any = JSON.parse(localStorage.getItem('Config'))[key];
     switch (type) {
         case typeE.int:
             return parseInt(data);
@@ -67,17 +67,17 @@ export const getConfig=(key:string,type:typeE = typeE.json):any=>{
  * @param {string} value 值
  * @returns {boolean}
  */
-export const setConfig=(key:string,value:string):boolean=>{
-    let data:object=JSON.parse(localStorage.getItem('Config'));
-    try{
-        data[key]=value;
-        localStorage.setItem('Config',JSON.stringify(data));
-    }catch (e) {
+export const setConfig = (key: string, value: string): boolean => {
+    let data: object = JSON.parse(localStorage.getItem('Config'));
+    try {
+        data[key] = value;
+        localStorage.setItem('Config', JSON.stringify(data));
+    } catch (e) {
         return false;
     }
     return true;
 }
 
-await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
-    publicL=e.publicL;
+await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
+    publicL = e.publicL;
 })

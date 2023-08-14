@@ -49,20 +49,19 @@ export default class QAjax {
             this.QAjaxs.send(null);
         }
         else if (this.method === 'POST' || this.method === 'PUT') {
-            /**
-             *打开请求
-             * */
+            // 打开请求
             this.QAjaxs.open(this.method, this.url, this.async);
-            /**
-             * POST请求设置请求头
-             * */
+            // POST请求设置请求头
             this.QAjaxs.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            /**
-             * 发送请求参数
-             */
+            // 发送请求参数
             this.QAjaxs.send(this.data);
         }
     }
+    /**
+     * 对象转字符串
+     * @param {object} data 数据
+     * @returns {string}
+     */
     params(data) {
         let arr = [];
         for (let i in data) {

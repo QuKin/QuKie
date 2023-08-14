@@ -9,7 +9,17 @@
 
 import {QApi} from "../../systemCallInterface/QApi.js";
 
-export interface IVolume{
-    set(val:number):QApi;
-    get():QApi;
+export interface IVolume {
+    /**
+     * 设置音量
+     * @param {Number} val 音量大小（0-1）
+     * @returns {QApi}
+     */
+    set(val: number): QApi;
+
+    /**
+     * 获取音量
+     * @returns {QApi}
+     */
+    get(): QApi;
 }

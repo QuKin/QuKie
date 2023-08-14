@@ -7,6 +7,6 @@
  * @Date            2023/8/8 10:54
  */
 
-export interface ISysFun{
-    md5:any;
+export interface ISysFun {
+    md5: any;
 }

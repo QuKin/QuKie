@@ -19,14 +19,15 @@ import {typeE} from "./kernel/mode/typeE.js";
 import md5 from "./kernel/systemCallInterface/Md5.js";
 import {getConfig} from "./kernel/systemCallInterface/_QCommon.js";
 
-class QuKie implements ISysVal,IAppVal,ISysFun{
-    _version:string;
-    _debug:boolean;
+class QuKie implements ISysVal, IAppVal, ISysFun {
+    _version: string;
+    _debug: boolean;
 
     constructor() {
         this.init();
     }
-    init(){
+
+    init() {
         this._version = '0.0.1';
         this._debug = true;
         // 系统值
@@ -36,22 +37,25 @@ class QuKie implements ISysVal,IAppVal,ISysFun{
         // app值
         this.appVal();
     }
+
     sysVal() {
         // 系统最多日志数量
-        this.logLength = getConfig('logLength',typeE.int);
+        this.logLength = getConfig('logLength', typeE.int);
         // 系统强度，0：不记录；1：只记录失败；2：只记录修改成功和失败；3：记录所有包括获取成功
-        this.logDissociation = getConfig('logDissociation',typeE.int);
+        this.logDissociation = getConfig('logDissociation', typeE.int);
         // 语言
-        this.language=getConfig('Language');
+        this.language = getConfig('Language');
     }
+
     sysFun() {
         this.md5 = md5;
     }
+
     appVal() {
         // app每个最多日志数量
-        this.appLogLength = getConfig('appLogLength',typeE.int);
+        this.appLogLength = getConfig('appLogLength', typeE.int);
         // app强度，0：不记录；1：只记录失败；2：只记录修改成功和失败；3：记录所有包括获取成功
-        this.appLogDissociation = getConfig('appLogDissociation',typeE.int);
+        this.appLogDissociation = getConfig('appLogDissociation', typeE.int);
     }
 
     logDissociation: number;
@@ -61,10 +65,11 @@ class QuKie implements ISysVal,IAppVal,ISysFun{
     language: Language;
     md5: any;
 }
+
 new devTest(); // 测试开发环境配置
 window.QLog = new Log();
 window.QApi = Api;
-window.CodeE=CodeE;
-window.typeE=typeE;
-window.LogIntensityE=LogIntensityE;
+window.CodeE = CodeE;
+window.typeE = typeE;
+window.LogIntensityE = LogIntensityE;
 window.qukie = window._ = new QuKie();

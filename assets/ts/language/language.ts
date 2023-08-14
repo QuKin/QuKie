@@ -6,6 +6,6 @@
  * @description     所有语言列表
  * @Date            2023/8/7 15:05
  */
-export enum Language{
-    zh_CN='zh_CN',
+export enum Language {
+    zh_CN = 'zh_CN',
 }

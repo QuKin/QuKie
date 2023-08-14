@@ -10,21 +10,22 @@ import IPopUp from './interface/IPopUp'
 import QRange from "../systemCallInterface/QRange.js";
 import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {QApi} from "../systemCallInterface/QApi.js";
-let PopUpL=null;
-await import("../../language/"+getConfig('Language')+"/kernel/desktop/PopUpL.js").then(e=>{
-    PopUpL=e.PopUpL;
+
+let PopUpL = null;
+await import("../../language/" + getConfig('Language') + "/kernel/desktop/PopUpL.js").then(e => {
+    PopUpL = e.PopUpL;
 })
-let publicL=null;
-await import("../../language/"+getConfig('Language')+"/publicL.js").then(e=>{
-    publicL=e.publicL;
+let publicL = null;
+await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
+    publicL = e.publicL;
 })
 
-export default class PopUp implements IPopUp{
-    private qrange:QRange;
-    private css:object;
-    private options:{body?:string,icon?:string};
-    private range:string;
-    private title:string;
+export default class PopUp implements IPopUp {
+    private qrange: QRange;
+    private css: object;
+    private options: { body?: string, icon?: string };
+    private range: string;
+    private title: string;
 
     /**
      * 构造函数
@@ -63,27 +64,29 @@ export default class PopUp implements IPopUp{
      * })
      * ```
      */
-    constructor(title:string,options:{body?:string,icon?:string},range:string='t',typeColor:any='info') {
-        this.qrange=new QRange('t','l','r','b','tl','lt','tr','rt','br','rb','bl','lb');
-        this.init(title,options,range,typeColor);
+    constructor(title: string, options: { body?: string, icon?: string }, range: string = 't', typeColor: any = 'info') {
+        this.qrange = new QRange('t', 'l', 'r', 'b', 'tl', 'lt', 'tr', 'rt', 'br', 'rb', 'bl', 'lb');
+        this.init(title, options, range, typeColor);
     }
-    private init(title,options:{body?:string,icon?:string},range:string,typeColor:any){
+
+    private init(title, options: { body?: string, icon?: string }, range: string, typeColor: any) {
         this.setTitle(title);
         this.setOptions(options);
         this.setRange(range);
         this.setTypeColor(typeColor);
     }
+
     /**
      * 设置范围类型
      * @param {string} range 范围，t：顶部；l：左边；r：右边：b：底部；tl/lt：左上角；tr/rt：右上角；br/rb：右下角；bl/lb：左下角
      * @returns {QApi}
      */
-    setRange(range:string):QApi{
-        if (this.qrange.is(range)){
-            this.range=range;
-            return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setRangeSuccess,this.range)
-        }else{
-            return QAL(window.LogIntensityE.Error,PopUpL.type, publicL.RangeError,[],PopUpL.rangeErrorOnlySupported+':'+this.qrange.show(), window.CodeE.RangeError)
+    setRange(range: string): QApi {
+        if (this.qrange.is(range)) {
+            this.range = range;
+            return QAL(window.LogIntensityE.SuccessError, PopUpL.type, PopUpL.setRangeSuccess, this.range)
+        } else {
+            return QAL(window.LogIntensityE.Error, PopUpL.type, publicL.RangeError, [], PopUpL.rangeErrorOnlySupported + ':' + this.qrange.show(), window.CodeE.RangeError)
         }
     }
 
@@ -92,7 +95,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getRange(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getRangeSuccess,this.range)
+        return QAL(window.LogIntensityE.All, PopUpL.type, PopUpL.getRangeSuccess, this.range)
     }
 
     /**
@@ -100,7 +103,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getTypeColor(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getTypeColorSuccess,this.css)
+        return QAL(window.LogIntensityE.All, PopUpL.type, PopUpL.getTypeColorSuccess, this.css)
     }
 
     /**
@@ -132,61 +135,63 @@ export default class PopUp implements IPopUp{
      *
      * @returns {QApi}
      */
-    setTypeColor(typeColor:any): QApi {
+    setTypeColor(typeColor: any): QApi {
         switch (typeColor) {
             case 'success':
-                this.css={
-                    border:'1px solid #67c23a',
-                    background:'#9aeb72',
-                    color:'#419915'
+                this.css = {
+                    border: '1px solid #67c23a',
+                    background: '#9aeb72',
+                    color: '#419915'
                 }
                 break;
             case 'error':
-                this.css={
-                    border:'1px solid #c23a3a',
-                    background:'#eb7272',
-                    color:'#991515'
+                this.css = {
+                    border: '1px solid #c23a3a',
+                    background: '#eb7272',
+                    color: '#991515'
                 }
                 break;
             case 'warning':
-                this.css={
-                    border:'1px solid #c2ab3a',
-                    background:'#ebd772',
-                    color:'#998315'
+                this.css = {
+                    border: '1px solid #c2ab3a',
+                    background: '#ebd772',
+                    color: '#998315'
                 }
                 break;
             case 'info':
-                this.css={
-                    border:'1px solid #b8b7b7',
-                    background:'#eae9e9',
-                    color:'#9a9999'
+                this.css = {
+                    border: '1px solid #b8b7b7',
+                    background: '#eae9e9',
+                    color: '#9a9999'
                 }
                 break;
             default:
-                if (typeColor.allColor===undefined){
-                    let length=typeColor.border.split(' ').length;
+                if (typeColor.allColor === undefined) {
+                    let length = typeColor.border.split(' ').length;
                     switch (length) {
                         case 1:
-                            this.css={
-                                border:'1px solid '+typeColor.border,
-                                background:typeColor.background,
-                                color:typeColor.color
+                            this.css = {
+                                border: '1px solid ' + typeColor.border,
+                                background: typeColor.background,
+                                color: typeColor.color
                             }
                             break;
-                        case 3:this.css=typeColor;break;
+                        case 3:
+                            this.css = typeColor;
+                            break;
                         default:
-                            return QAL(window.LogIntensityE.Error,PopUpL.type, PopUpL.setTypeColorError,[], 'border参数错误，border参数只能一个颜色，或者三个整体参数：1px solid red', 504)
+                            return QAL(window.LogIntensityE.Error, PopUpL.type, PopUpL.setTypeColorError, [], 'border参数错误，border参数只能一个颜色，或者三个整体参数：1px solid red', 504)
                     }
-                }else{
-                    this.css={
-                        border:typeColor.allColor,
-                        background:typeColor.allColor,
-                        color:typeColor.allColor
+                } else {
+                    this.css = {
+                        border: typeColor.allColor,
+                        background: typeColor.allColor,
+                        color: typeColor.allColor
                     }
                 }
                 break;
         }
-        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setTypeColorSuccess,this.css)
+        return QAL(window.LogIntensityE.SuccessError, PopUpL.type, PopUpL.setTypeColorSuccess, this.css)
     }
 
     /**
@@ -194,7 +199,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getTitle(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getTitleSuccess,this.title)
+        return QAL(window.LogIntensityE.All, PopUpL.type, PopUpL.getTitleSuccess, this.title)
     }
 
     /**
@@ -203,8 +208,8 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     setTitle(title: string): QApi {
-        this.title=title;
-        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setTitleSuccess,this.title)
+        this.title = title;
+        return QAL(window.LogIntensityE.SuccessError, PopUpL.type, PopUpL.setTitleSuccess, this.title)
     }
 
     /**
@@ -212,7 +217,7 @@ export default class PopUp implements IPopUp{
      * @returns {QApi}
      */
     getOptions(): QApi {
-        return QAL(window.LogIntensityE.All,PopUpL.type, PopUpL.getOptionsSuccess,this.options)
+        return QAL(window.LogIntensityE.All, PopUpL.type, PopUpL.getOptionsSuccess, this.options)
     }
 
     /**
@@ -223,22 +228,22 @@ export default class PopUp implements IPopUp{
      * }} [options=undefined] 标题
      * @returns {QApi}
      */
-    setOptions(options:{body?:string,icon?:string}): QApi {
-        this.options=options;
-        return QAL(window.LogIntensityE.SuccessError,PopUpL.type, PopUpL.setOptionsSuccess,this.options)
+    setOptions(options: { body?: string, icon?: string }): QApi {
+        this.options = options;
+        return QAL(window.LogIntensityE.SuccessError, PopUpL.type, PopUpL.setOptionsSuccess, this.options)
     }
 
     /**
      * 展示弹窗
      */
-    show():void{
+    show(): void {
 
     }
 
     /**
      * 关闭弹窗
      */
-    close():void{
+    close(): void {
 
     }
 }

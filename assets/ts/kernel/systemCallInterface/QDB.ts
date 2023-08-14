@@ -8,17 +8,17 @@ import {getConfig} from "./_QCommon";
  * @Date            2023/8/7 9:21
  */
 
-let QDBL=null;
-await import("../../language/"+getConfig('Language')+"/kernel/systemCallInterface/QDBL.js").then(e=>{
-    QDBL=e.QApiL;
+let QDBL = null;
+await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QDBL.js").then(e => {
+    QDBL = e.QApiL;
 })
 
 export default class QDB {
-    dbName:string;
-    dbVersion:number;
-    dbStoreName:string;
-    db:any;
-    indexedDB:any;
+    dbName: string;
+    dbVersion: number;
+    dbStoreName: string;
+    db: any;
+    indexedDB: any;
 
     /**
      * 生成indexedDB
@@ -50,7 +50,12 @@ export default class QDB {
      *
      * @param {Function} upgradeneeded 创建数据库
      */
-    constructor(param, options = { autoIncrement: true }, index = [{ "indexName": null, "keyPath": null, "objectParameters": { unique: false } }], upgradeneeded = (event) => { }) {
+    constructor(param, options = {autoIncrement: true}, index = [{
+        "indexName": null,
+        "keyPath": null,
+        "objectParameters": {unique: false}
+    }], upgradeneeded = (event) => {
+    }) {
         if (typeof param === 'string') this.dbName = param;
         else this.dbName = param.dbName;
 
@@ -85,7 +90,12 @@ export default class QDB {
      *
      * @returns {Promise}
      */
-    open(options?, index = [{ "indexName": null, "keyPath": null, "objectParameters": { unique: false } }], upgradeneeded = (event) => { }):Promise<any> {
+    open(options?, index = [{
+        "indexName": null,
+        "keyPath": null,
+        "objectParameters": {unique: false}
+    }], upgradeneeded = (event) => {
+    }): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.db) {
                 resolve(this);
@@ -99,7 +109,7 @@ export default class QDB {
 
                 const request = window.indexedDB.open(this.dbName, this.dbVersion);
                 // 成功
-                request.onsuccess = (event:any) => {
+                request.onsuccess = (event: any) => {
                     this.db = event.target.result;
                     resolve(this);
                 }
@@ -107,7 +117,7 @@ export default class QDB {
                 if (arguments.length === 3) {
                     request.onupgradeneeded = upgradeneeded;
                 } else {
-                    request.onupgradeneeded = (event:any) => {
+                    request.onupgradeneeded = (event: any) => {
                         this.db = event.target.result;
                         // 先判断某个对象仓库是否存在，如果不存在就创建该对象仓库
                         if (!this.db.objectStoreNames.contains(this.dbStoreName)) {
@@ -201,7 +211,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    get(key = null, callback = () => { }) {
+    get(key = null, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = key == null ? this.getStore().getAll() : this.getStore().get(key);
             request.onsuccess = () => success(request.result);
@@ -217,7 +228,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    getIndex(indexName, indexValue, callback = () => { }) {
+    getIndex(indexName, indexValue, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = this.getStore().index(indexName).get(indexValue);
             request.onsuccess = () => success(request.result);
@@ -233,7 +245,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    getIndexCursor(indexName, indexValue, callback = () => { }) {
+    getIndexCursor(indexName, indexValue, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             let list = [];
             const request = this.getStore()
@@ -288,7 +301,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    set(value, key = null, callback = () => { }) {
+    set(value, key = null, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = key == null ? this.getStore('readwrite').put(value) : this.getStore('readwrite').put(value, key);
 
@@ -316,7 +330,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    add(value, callback = () => { }) {
+    add(value, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = this.getStore('readwrite').add(value);
 
@@ -343,7 +358,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    sets(datas, callback = () => { }) {
+    sets(datas, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             // const request = this.getStore('readwrite').put(datas[0][Object.keys(datas[0])[0]], Object.keys(datas[0])[0]);
             const adds = this.getStore('readwrite');
@@ -380,7 +396,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    del(key, callback = () => { }) {
+    del(key, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = this.getStore('readwrite').delete(key);
 
@@ -406,7 +423,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    clear(callback = () => { }) {
+    clear(callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = this.getStore('readwrite').clear();
 
@@ -432,7 +450,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    count(callback = () => { }) {
+    count(callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = this.getStore().count();
 
@@ -459,7 +478,8 @@ export default class QDB {
      * @callback callback 回调函数
      * @returns {Promise}
      */
-    delDB(dbName = this.dbName, callback = () => { }) {
+    delDB(dbName = this.dbName, callback = () => {
+    }) {
         return this.getRequest((success, error) => {
             const request = this.db.deleteDatabase(dbName);
 

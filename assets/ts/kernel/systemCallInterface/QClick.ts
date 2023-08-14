@@ -12,18 +12,20 @@ import {trim} from "./QCommon.js";
 import {CodeE} from "../mode/codeE.js";
 import {IQClick} from "./interface/IQClick.js";
 
-let QClickL=null;
-await import("../../language/"+getConfig('Language')+"/kernel/systemCallInterface/QClickL.js").then(e=>{
-    QClickL=e.QClickL;
+let QClickL = null;
+await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QClickL.js").then(e => {
+    QClickL = e.QClickL;
 })
 
-export default class QClick implements IQClick{
-    private name:string;
-    private callback:Function;
-    constructor(name:string,callback:Function) {
-        this.init(name,callback);
+export default class QClick implements IQClick {
+    private name: string;
+    private callback: Function;
+
+    constructor(name: string, callback: Function) {
+        this.init(name, callback);
     }
-    private init(name:string,callback:Function){
+
+    private init(name: string, callback: Function) {
         this.setName(name);
         this.setCallback(callback);
     }
@@ -32,8 +34,8 @@ export default class QClick implements IQClick{
      * 获取名称
      * @returns {QApi}
      */
-    getName():QApi{
-        return QAL(window.LogIntensityE.Success,QClickL.type, QClickL.getNameSuccess,this.name)
+    getName(): QApi {
+        return QAL(window.LogIntensityE.Success, QClickL.type, QClickL.getNameSuccess, this.name)
     }
 
     /**
@@ -42,12 +44,12 @@ export default class QClick implements IQClick{
      * @param {string} name 名称，但不能为空
      * @returns {QApi}
      */
-    setName(name:string):QApi{
-        if (trim(name).data===''){
-            return QAL(window.LogIntensityE.Error,QClickL.type, QClickL.setNameError,[],QClickL.setNameErrorMessage,CodeE.NotFound)
+    setName(name: string): QApi {
+        if (trim(name).data === '') {
+            return QAL(window.LogIntensityE.Error, QClickL.type, QClickL.setNameError, [], QClickL.setNameErrorMessage, CodeE.NotFound)
         }
-        this.name=name;
-        return QAL(window.LogIntensityE.SuccessError,QClickL.type, QClickL.setNameSuccess,this.name)
+        this.name = name;
+        return QAL(window.LogIntensityE.SuccessError, QClickL.type, QClickL.setNameSuccess, this.name)
     }
 
     /**
@@ -55,19 +57,19 @@ export default class QClick implements IQClick{
      * @param {Function} click 点击事件
      * @returns {QApi}
      */
-    setCallback(click:Function):QApi{
-        if (typeof click==='function'){
-            this.callback=click;
-            return QAL(window.LogIntensityE.SuccessError,QClickL.type, QClickL.setCallbackSuccess,this.callback)
-        }else{
-            return QAL(window.LogIntensityE.Error,QClickL.type, QClickL.setCallbackError,[],QClickL.setCallbackErrorMessage,CodeE.ParametricError)
+    setCallback(click: Function): QApi {
+        if (typeof click === 'function') {
+            this.callback = click;
+            return QAL(window.LogIntensityE.SuccessError, QClickL.type, QClickL.setCallbackSuccess, this.callback)
+        } else {
+            return QAL(window.LogIntensityE.Error, QClickL.type, QClickL.setCallbackError, [], QClickL.setCallbackErrorMessage, CodeE.ParametricError)
         }
     }
 
     /**
      * 点击事件
      */
-    click():void{
+    click(): void {
         this.callback();
     }
 }

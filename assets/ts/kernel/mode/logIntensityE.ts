@@ -13,9 +13,9 @@
  * 2：只记录修改成功和失败
  * 3：记录所有包括获取成功
  */
-export enum LogIntensityE{
-    Not=0,
-    Error=1,
-    SuccessError=2,
-    All=3
+export enum LogIntensityE {
+    Not = 0,
+    Error = 1,
+    SuccessError = 2,
+    All = 3
 }
