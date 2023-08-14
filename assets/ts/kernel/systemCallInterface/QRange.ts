@@ -21,8 +21,8 @@ export default class QRange implements IQRange {
      * @param {any[]} arr 范围
      * @private
      */
-    private init(arr){
-        this.arr=arr;
+    private init(arr): void {
+        this.arr = arr;
     }
 
     /**
@@ -41,5 +41,13 @@ export default class QRange implements IQRange {
      */
     show(join: string = ','): string {
         return this.arr.join(join);
+    }
+
+    /**
+     * 添加范围
+     * @param {any} item 值
+     */
+    add(item: any): void {
+        this.arr.push(item);
     }
 }

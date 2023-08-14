@@ -35,5 +35,12 @@ export default class QRange {
     show(join = ',') {
         return this.arr.join(join);
     }
+    /**
+     * 添加范围
+     * @param {any} item 值
+     */
+    add(item) {
+        this.arr.push(item);
+    }
 }
 //# sourceMappingURL=QRange.js.map

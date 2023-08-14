@@ -6,5 +6,8 @@
  * @Date            2023/8/7 9:29
  */
 export enum QDBL {
-    browserNotSupportIndexedDB = '你的游览器不支持indexedDB,请更换'
+    type = 'QDB',
+    browserNotSupportIndexedDB = '你的游览器不支持indexedDB,请更换',
+    openErr = '数据库打开报错',
+    isErr='没有指定仓库名称',
 }

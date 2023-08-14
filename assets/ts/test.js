@@ -25,4 +25,21 @@
 //         body:'1'
 //     });
 // },2000)
+import QDB from "./kernel/systemCallInterface/QDB.js";
+new QDB({
+    name: 'test',
+    version: 1
+}, [{
+        name: 's1',
+        options: {
+            keyPath: 'id',
+            autoIncrement: true
+        },
+        indexs: [{
+                name: 'sid',
+                options: {
+                    unique: true
+                }
+            }]
+    }]);
 //# sourceMappingURL=test.js.map

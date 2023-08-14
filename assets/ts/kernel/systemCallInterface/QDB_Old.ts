@@ -1,21 +1,25 @@
-import { getConfig } from "./_QCommon";
 /**
- * @name            QDB
+ * @name            QDB_Old
  * @version         1.0
  * @author          QuKie <13606184008@163.com>
  * @description     indexedDB封装
  * @Date            2023/8/7 9:21
  */
+
+import {getConfig} from "./_QCommon.js";
+
 let QDBL = null;
 await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QDBL.js").then(e => {
-    QDBL = e.QApiL;
-});
-export default class QDB {
-    dbName;
-    dbVersion;
-    dbStoreName;
-    db;
-    indexedDB;
+    QDBL = e.QDBL;
+})
+
+export default class QDB_Old {
+    dbName: string;
+    dbVersion: number;
+    dbStoreName: string;
+    db: any;
+    indexedDB: any;
+
     /**
      * 生成indexedDB
      *
@@ -46,18 +50,18 @@ export default class QDB {
      *
      * @param {Function} upgradeneeded 创建数据库
      */
-    constructor(param, options = { autoIncrement: true }, index = [{
-            "indexName": null,
-            "keyPath": null,
-            "objectParameters": { unique: false }
-        }], upgradeneeded = (event) => {
+    constructor(param, options = {autoIncrement: true}, index = [{
+        "indexName": null,
+        "keyPath": null,
+        "objectParameters": {unique: false}
+    }], upgradeneeded = (event) => {
     }) {
-        if (typeof param === 'string')
-            this.dbName = param;
-        else
-            this.dbName = param.dbName;
+        if (typeof param === 'string') this.dbName = param;
+        else this.dbName = param.dbName;
+
         this.dbVersion = param.dbVersion == undefined ? 1 : param.dbVersion;
         this.dbStoreName = param.dbStoreName == undefined ? ('QDB_' + new Date().getTime()) : param.dbStoreName;
+
         switch (arguments.length) {
             case 3:
                 this.open(options, index);
@@ -70,6 +74,7 @@ export default class QDB {
                 break;
         }
     }
+
     /**
      * 开启数据库
      * @param {*} options 创建数据库的参数
@@ -85,35 +90,34 @@ export default class QDB {
      *
      * @returns {Promise}
      */
-    open(options, index = [{
-            "indexName": null,
-            "keyPath": null,
-            "objectParameters": { unique: false }
-        }], upgradeneeded = (event) => {
-    }) {
+    open(options?, index = [{
+        "indexName": null,
+        "keyPath": null,
+        "objectParameters": {unique: false}
+    }], upgradeneeded = (event) => {
+    }): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.db) {
                 resolve(this);
-            }
-            else {
+            } else {
                 // 兼容
                 // @ts-ignore
                 this.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
                 if (!this.indexedDB) {
                     reject(QDBL.browserNotSupportIndexedDB);
                 }
+
                 const request = window.indexedDB.open(this.dbName, this.dbVersion);
                 // 成功
-                request.onsuccess = (event) => {
+                request.onsuccess = (event: any) => {
                     this.db = event.target.result;
                     resolve(this);
-                };
+                }
                 // 创建数据库
                 if (arguments.length === 3) {
                     request.onupgradeneeded = upgradeneeded;
-                }
-                else {
-                    request.onupgradeneeded = (event) => {
+                } else {
+                    request.onupgradeneeded = (event: any) => {
                         this.db = event.target.result;
                         // 先判断某个对象仓库是否存在，如果不存在就创建该对象仓库
                         if (!this.db.objectStoreNames.contains(this.dbStoreName)) {
@@ -131,15 +135,17 @@ export default class QDB {
                                 }
                             }
                         }
-                    };
+                    }
                 }
+
                 // 失败
                 request.onerror = (event) => {
                     reject(event);
-                };
+                }
             }
-        });
+        })
     }
+
     /**
      * 获取store
      * @param {String} mode 模式：readonly读和readwrite写
@@ -149,6 +155,7 @@ export default class QDB {
     getStore(mode = 'readonly', dbStoreName = this.dbStoreName) {
         return this.db.transaction(dbStoreName, mode).objectStore(dbStoreName);
     }
+
     /**
      * 输出
      * @param {Object} request 事务
@@ -162,18 +169,19 @@ export default class QDB {
                     callback(false, value);
                 }
                 resolve(value);
-            };
+            }
             const error = event => {
                 if (callback && typeof callback === 'function') {
                     callback(event);
                 }
                 reject(event);
-            };
+            }
             return this.open().then(() => {
                 request(success, error);
             }).catch(error);
-        });
+        })
     }
+
     /**
      * 查询数据
      *
@@ -211,6 +219,7 @@ export default class QDB {
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 索引查询数据
      *
@@ -227,6 +236,7 @@ export default class QDB {
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 索引游标查询数据
      *
@@ -247,14 +257,14 @@ export default class QDB {
                 if (cursor) {
                     list.push(cursor.value);
                     cursor.continue(); // 遍历了存储对象中的所有内容
-                }
-                else {
+                } else {
                     success(list);
                 }
-            };
+            }
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 索引删除
      *
@@ -265,6 +275,7 @@ export default class QDB {
         this.db.deleteIndex(indexName);
         return null;
     }
+
     /**
      * 修改数据或增加数据
      *
@@ -294,10 +305,12 @@ export default class QDB {
     }) {
         return this.getRequest((success, error) => {
             const request = key == null ? this.getStore('readwrite').put(value) : this.getStore('readwrite').put(value, key);
+
             request.onsuccess = () => success(value);
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 增加数据
      *
@@ -321,10 +334,12 @@ export default class QDB {
     }) {
         return this.getRequest((success, error) => {
             const request = this.getStore('readwrite').add(value);
+
             request.onsuccess = () => success(value);
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 增加多条数据
      * 如果是多个数据，建议用这个方法
@@ -348,11 +363,11 @@ export default class QDB {
         return this.getRequest((success, error) => {
             // const request = this.getStore('readwrite').put(datas[0][Object.keys(datas[0])[0]], Object.keys(datas[0])[0]);
             const adds = this.getStore('readwrite');
+
             datas.forEach(data => {
                 if (typeof data === 'string') {
                     adds.add(data);
-                }
-                else {
+                } else {
                     adds.add(data[Object.keys(data)[0]], Object.keys(data)[0]);
                 }
             });
@@ -362,6 +377,7 @@ export default class QDB {
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 删除数据
      *
@@ -384,10 +400,12 @@ export default class QDB {
     }) {
         return this.getRequest((success, error) => {
             const request = this.getStore('readwrite').delete(key);
+
             request.onsuccess = () => success(key);
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 清除数据
      *
@@ -409,10 +427,12 @@ export default class QDB {
     }) {
         return this.getRequest((success, error) => {
             const request = this.getStore('readwrite').clear();
+
             request.onsuccess = () => success(null);
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 统计数据
      *
@@ -434,10 +454,12 @@ export default class QDB {
     }) {
         return this.getRequest((success, error) => {
             const request = this.getStore().count();
+
             request.onsuccess = () => success(request.result);
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 删除数据库
      *
@@ -460,10 +482,12 @@ export default class QDB {
     }) {
         return this.getRequest((success, error) => {
             const request = this.db.deleteDatabase(dbName);
+
             request.onsuccess = () => success(null);
             request.onerror = error;
         }, callback);
     }
+
     /**
      * 关闭数据库
      * @param {Object} [db=this.db] 数据库实例
@@ -472,4 +496,3 @@ export default class QDB {
         db.close();
     }
 }
-//# sourceMappingURL=QDB.js.map

@@ -15,4 +15,7 @@ declare interface Window {
     typeE?: any,
     LogIntensityE?: any,
     _?: any,
+    mozIndexedDB?: any,
+    msIndexedDB?: any,
+    webkitIndexedDB?: any,
 }
