@@ -6,7 +6,7 @@
  * @Date            2023/8/7 7:49
  */
 
-import { QApi,Api } from './QApi.js';
+import {QApi, Api} from './QApi.js';
 
 /**
  * 获取格式化时间
@@ -14,7 +14,7 @@ import { QApi,Api } from './QApi.js';
  * @param {Date} [date=new Date()] 时间
  * @returns {QApi}
  */
-export const getDateTime = (date:Date = new Date()):QApi => {
+export const getDateTime = (date: Date = new Date()): QApi => {
     let year = date.getFullYear(),
         month = date.getMonth() + 1,
         day = date.getDate(),
@@ -31,6 +31,7 @@ export const getDateTime = (date:Date = new Date()):QApi => {
         if (i < 10) i = "0" + i;
         return i;
     }
+
     return Api(year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分" + second + "秒")
 }
 
@@ -40,7 +41,7 @@ export const getDateTime = (date:Date = new Date()):QApi => {
  * @param {string} email 邮件
  * @returns {QApi}
  */
-export const isEmail = (email:string):QApi => {
+export const isEmail = (email: string): QApi => {
     let reg = /^([\w+\.])+@\w+([.]\w+)+$/
     return Api(reg.test(email))
 }
@@ -51,10 +52,10 @@ export const isEmail = (email:string):QApi => {
  * @param {number|string} phone 手机号
  * @returns {QApi}
  */
-export const isPhone = (phone:number|string):QApi => {
+export const isPhone = (phone: number | string): QApi => {
     let reg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
-    if (typeof phone==='number'){
-        phone=phone.toString();
+    if (typeof phone === 'number') {
+        phone = phone.toString();
     }
     return Api(reg.test(phone))
 }
@@ -66,6 +67,16 @@ export const isPhone = (phone:number|string):QApi => {
  * @param {number} max 最大值
  * @returns {QApi}
  */
-export const random = (min:number, max:number):QApi => {
+export const random = (min: number, max: number): QApi => {
     return Api(Math.floor(Math.random() * (max - min + 1)) + min)
+}
+
+/**
+ * 去掉两边空字符串
+ * @name trim
+ * @param {string} str 字符串
+ * @returns {QApi}
+ */
+export const trim = (str: string): QApi => {
+    return Api(str.replace(/(^\s*)|(\s*$)/g, ""));
 }

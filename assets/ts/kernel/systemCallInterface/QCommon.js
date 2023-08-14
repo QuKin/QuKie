@@ -59,4 +59,13 @@ export const isPhone = (phone) => {
 export const random = (min, max) => {
     return Api(Math.floor(Math.random() * (max - min + 1)) + min);
 };
+/**
+ * 去掉两边空字符串
+ * @name trim
+ * @param {string} str 字符串
+ * @returns {QApi}
+ */
+export const trim = (str) => {
+    return Api(str.replace(/(^\s*)|(\s*$)/g, ""));
+};
 //# sourceMappingURL=QCommon.js.map
