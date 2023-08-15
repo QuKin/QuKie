@@ -26,13 +26,13 @@
 //     });
 // },2000)
 import QDB from "./kernel/systemCallInterface/QDB.js";
-new QDB({
+let qdb=new QDB({
     name:'test',
     version:1
 },[{
     name:'s1',
     options:{
-        keyPath:'id',
+        keyPath:'sid',
         autoIncrement:true
     },
     indexs:[{
@@ -40,5 +40,29 @@ new QDB({
         options:{
             unique:true
         }
+    },{
+        name:'name',
+        options:{
+            unique:true
+        }
     }]
 }])
+qdb.open().then(()=>{
+    qdb.setStoreName('s1')
+    qdb.add({
+        sid: 2,
+        name: 'bbb'
+    }).then(e=>{
+        console.log(e)
+    }).catch(e=>{
+        console.log(e)
+    })
+    qdb.getAll().then(e=>{
+        console.log(e);
+    })
+})
+// setTimeout(()=>{
+//     a.add({
+//         sid:'1'
+//     })
+// },100)
