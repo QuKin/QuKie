@@ -25,44 +25,48 @@
 //         body:'1'
 //     });
 // },2000)
-import QDB from "./kernel/systemCallInterface/QDB.js";
-let qdb=new QDB({
-    name:'test',
-    version:1
-},[{
-    name:'s1',
-    options:{
-        keyPath:'sid',
-        autoIncrement:true
-    },
-    indexs:[{
-        name:'sid',
-        options:{
-            unique:true
-        }
-    },{
-        name:'name',
-        options:{
-            unique:true
-        }
-    }]
-}])
-qdb.open().then(()=>{
-    qdb.setStoreName('s1')
-    qdb.add({
-        sid: 2,
-        name: 'bbb'
-    }).then(e=>{
-        console.log(e)
-    }).catch(e=>{
-        console.log(e)
-    })
-    qdb.getAll().then(e=>{
-        console.log(e);
-    })
-})
+// import QDB from "./kernel/systemCallInterface/QDB.js";
+// let qdb=new QDB({
+//     name:'test',
+//     version:1
+// },[{
+//     name:'s1',
+//     options:{
+//         keyPath:'sid',
+//         autoIncrement:true
+//     },
+//     indexs:[{
+//         name:'sid',
+//         options:{
+//             unique:true
+//         }
+//     },{
+//         name:'name',
+//         options:{
+//             unique:true
+//         }
+//     }]
+// }])
+// qdb.open().then(()=>{
+//     qdb.setStoreName('s1')
+//     qdb.add({
+//         sid: 2,
+//         name: 'bbb'
+//     }).then(e=>{
+//         console.log(e)
+//     }).catch(e=>{
+//         console.log(e)
+//     })
+//     qdb.getAll().then(e=>{
+//         console.log(e);
+//     })
+// })
 // setTimeout(()=>{
 //     a.add({
 //         sid:'1'
 //     })
 // },100)
+
+import VFS from "./kernel/VFS/VFS.js";
+
+let vfs = new VFS();
