@@ -10,16 +10,69 @@
 import QDB from "../systemCallInterface/QDB.js";
 import {IVFS} from "./interface/IVFS.js";
 
-export default class VFS implements IVFS{
-    DB:QDB
+export default class VFS implements IVFS {
+    file: QDB
+
     constructor() {
         this.init();
     }
-    private init(){
-        // this.DB=new QDB({
-        //     dbName: 'QuKin',
-        //     dbVersion: 1,
-        //     dbStoreName: 'Student'
-        // })
+
+    private init() {
+        this.file = new QDB({
+            name: 'file',
+            version: 1
+        }, [
+            {
+                name: 'app',
+                options: {keyPath: 'id', autoIncrement: true},
+                indexs: [
+                    {name: 'id', options: {unique: true}},
+                    {name: 'level', options: {unique: true}},
+                    {name: 'pid', options: {unique: true}},
+                    {name: 'path', options: {unique: true}},
+                    {name: 'name', options: {unique: true}},
+                    {name: 'type', options: {unique: true}},
+                    {name: 'file', options: {unique: true}},
+                    {name: 'size', options: {unique: true}},
+                    {name: 'time', options: {unique: true}},
+                    {name: 'date', options: {unique: true}},
+                    {name: 'version', options: {unique: true}},
+                    {name: 'des'},
+                ]
+            },
+            {
+                name: 'home',
+                options: {keyPath: 'id', autoIncrement: true},
+                indexs: [
+                    {name: 'id', options: {unique: true}},
+                    {name: 'level', options: {unique: true}},
+                    {name: 'pid', options: {unique: true}},
+                    {name: 'path', options: {unique: true}},
+                    {name: 'name', options: {unique: true}},
+                    {name: 'type', options: {unique: true}},
+                    {name: 'file', options: {unique: true}},
+                    {name: 'size', options: {unique: true}},
+                    {name: 'time', options: {unique: true}},
+                    {name: 'date', options: {unique: true}},
+                    {name: 'version', options: {unique: true}},
+                    {name: 'des'},
+                ]
+            },
+            {
+                name: 'cache',
+                options: {keyPath: 'id', autoIncrement: true},
+                indexs: [
+                    {name: 'id', options: {unique: true}},
+                    {name: 'level', options: {unique: true}},
+                    {name: 'pid', options: {unique: true}},
+                    {name: 'path', options: {unique: true}},
+                    {name: 'name', options: {unique: true}},
+                    {name: 'type', options: {unique: true}},
+                    {name: 'file', options: {unique: true}},
+                    {name: 'version', options: {unique: true}},
+                    {name: 'des'},
+                ]
+            },
+        ])
     }
 }

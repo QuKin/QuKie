@@ -9,5 +9,5 @@
 import QDB from "../../systemCallInterface/QDB.js";
 
 export interface IVFS{
-    DB:QDB
+    file:QDB
 }

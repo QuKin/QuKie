@@ -71,7 +71,7 @@ export default class QDB implements IQDB {
 
     /**
      * 打开数据库
-     * @returns {QApi}
+     * @returns {Promise}
      */
     open() {
         let _this = this;
@@ -145,6 +145,7 @@ export default class QDB implements IQDB {
     /**
      * 插入数据
      * @param {object} data 数据
+     * @returns {Promise}
      */
     add(data: object) {
         return new Promise((resolve, reject) => {

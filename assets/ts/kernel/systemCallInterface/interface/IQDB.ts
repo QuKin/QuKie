@@ -18,6 +18,12 @@ export interface IQDB {
     setStoreName(storeName: string): QApi;
 
     /**
+     * 打开数据库
+     * @returns {Promise}
+     */
+    open()
+
+    /**
      * 获取仓库名称
      * @returns {string}
      */

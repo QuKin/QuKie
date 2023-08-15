@@ -63,7 +63,7 @@ export default class QDB {
     }
     /**
      * 打开数据库
-     * @returns {QApi}
+     * @returns {Promise}
      */
     open() {
         let _this = this;
@@ -135,6 +135,7 @@ export default class QDB {
     /**
      * 插入数据
      * @param {object} data 数据
+     * @returns {Promise}
      */
     add(data) {
         return new Promise((resolve, reject) => {
