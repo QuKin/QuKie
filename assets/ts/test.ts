@@ -71,7 +71,7 @@ import VFS from "./kernel/VFS/VFS.js";
 
 setTimeout(()=>{
     let vfs = new VFS();
-    vfs.init().then(()=>{
+    vfs.init().then(async ()=>{
         // vfs.ls().then(e=>{
         //     console.log(e);
         // })
@@ -88,8 +88,13 @@ setTimeout(()=>{
         //         console.log(e);
         //     })
         // })
-        vfs.rmdir('test5655566').then(e=>{
-            console.log(e);
-        })
+        // vfs.rmdir('test5').then(e=>{
+        //     console.log(e);
+        // })
+        await vfs.cd('/test4');
+        // await vfs.rmdir('test6');
+        // await vfs.mkdir('test6');
+        await vfs.cd('/test4/test6');
+        // await vfs.mkdir('test7');
     })
 },100)

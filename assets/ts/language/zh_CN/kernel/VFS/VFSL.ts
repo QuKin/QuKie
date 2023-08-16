@@ -19,4 +19,5 @@ export enum VFSL{
     rmdirSuccess='删除目录成功',
     rmdirError='删除目录失败',
     rmdirQuantitiesError='rmdir只能删除空目录，如有内容，请用rm命令',
+    fileNotFound='文件不存在',
 }

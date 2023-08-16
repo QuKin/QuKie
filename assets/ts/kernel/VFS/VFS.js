@@ -230,6 +230,14 @@ export default class VFS extends ATree {
     /**
      * 进入或者退出目录
      * @param {string} path 路径
+     * /
+     * /test/
+     * /test1/test2/
+     * test3/
+     * ./test4/
+     * ../
+     * ../../
+     * ../test2/
      */
     cd(path) {
         return new Promise((resolve, reject) => {
@@ -237,11 +245,14 @@ export default class VFS extends ATree {
                 this.path = '/';
                 return true;
             }
+            let temp = path;
+            if (path.indexOf('/') !== 0) {
+            }
+            // 判断路径最后一个字符是否是/
+            if (!path.endsWith('/'))
+                path += '/';
             this.is(path).then((e) => {
                 if (e.data.type === 'd') {
-                    // 判断路径最后一个字符是否是/
-                    if (!path.endsWith('/'))
-                        path += '/';
                     this.path = path;
                     resolve(e);
                 }
@@ -291,7 +302,7 @@ export default class VFS extends ATree {
             if (arguments.length !== 0 && !this.isType(type, ['a', 'l', 'i'])) {
                 reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.lsTypeError, type, VFSL.lsTypeError, CodeE.TypeError));
             }
-            this.file.search('path', this.path).then((e) => {
+            this.file.search('path', this.path).then(async (e) => {
                 let data = [];
                 for (const item of e.data) {
                     let temp = {};
@@ -303,9 +314,10 @@ export default class VFS extends ATree {
                         if (type.indexOf('l') !== -1) {
                             // 判断是否是目录
                             if (item.type === 'd') {
-                                this.file.search('pid', item.id).then((e) => {
-                                    temp.quantities = e.data.length;
+                                const res = await this.file.search('pid', item.id).catch(e => {
+                                    reject(e);
                                 });
+                                temp.quantities = res.data.length;
                             }
                             else {
                                 temp.quantities = 0;
@@ -393,8 +405,6 @@ export default class VFS extends ATree {
         return new Promise((resolve, reject) => {
             this.is(name).then((e) => {
                 if (e.type === 'd') {
-                    console.log(e);
-                    console.log(e.id, e.quantities, e.date, e.name, e.size, e.time, e.type);
                     if (e.quantities === 0) {
                         this.file.delete(e.id).then(e => {
                             resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.rmdirSuccess, e));
@@ -409,7 +419,8 @@ export default class VFS extends ATree {
                 else {
                     reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.rmdirNotError, e, VFSL.rmdirNotError, CodeE.Error));
                 }
-            }).catch(() => {
+            }).catch((e) => {
+                reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.fileNotFound, e, VFSL.fileNotFound, CodeE.Error));
             });
         });
     }

@@ -20,5 +20,6 @@ export var VFSL;
     VFSL["rmdirSuccess"] = "\u5220\u9664\u76EE\u5F55\u6210\u529F";
     VFSL["rmdirError"] = "\u5220\u9664\u76EE\u5F55\u5931\u8D25";
     VFSL["rmdirQuantitiesError"] = "rmdir\u53EA\u80FD\u5220\u9664\u7A7A\u76EE\u5F55\uFF0C\u5982\u6709\u5185\u5BB9\uFF0C\u8BF7\u7528rm\u547D\u4EE4";
+    VFSL["fileNotFound"] = "\u6587\u4EF6\u4E0D\u5B58\u5728";
 })(VFSL || (VFSL = {}));
 //# sourceMappingURL=VFSL.js.map

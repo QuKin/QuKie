@@ -242,6 +242,14 @@ export default class VFS extends ATree implements IVFS, ICommand {
     /**
      * 进入或者退出目录
      * @param {string} path 路径
+     * /
+     * /test/
+     * /test1/test2/
+     * test3/
+     * ./test4/
+     * ../
+     * ../../
+     * ../test2/
      */
     cd(path: string) {
         return new Promise((resolve, reject) => {
@@ -249,10 +257,14 @@ export default class VFS extends ATree implements IVFS, ICommand {
                 this.path = '/';
                 return true;
             }
+            let temp:string=path;
+            if (path.indexOf('/')!==0){
+
+            }
+            // 判断路径最后一个字符是否是/
+            if (!path.endsWith('/')) path+='/';
             this.is(path).then((e:QApi)=>{
                 if (e.data.type==='d'){
-                    // 判断路径最后一个字符是否是/
-                    if (!path.endsWith('/')) path+='/';
                     this.path=path;
                     resolve(e);
                 }else{
@@ -352,7 +364,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
             if (arguments.length !== 0 && !this.isType(type, ['a', 'l', 'i'])) {
                 reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.lsTypeError, type, VFSL.lsTypeError, CodeE.TypeError))
             }
-            this.file.search('path', this.path).then((e: QApi) => {
+            this.file.search('path', this.path).then(async (e: QApi) => {
                 let data: IFileFormat[] = [];
                 for (const item of e.data) {
                     let temp: IFileFormat = {};
@@ -363,9 +375,10 @@ export default class VFS extends ATree implements IVFS, ICommand {
                         if (type.indexOf('l') !== -1) {
                             // 判断是否是目录
                             if (item.type === 'd') {
-                                this.file.search('pid', item.id).then((e: QApi) => {
-                                    temp.quantities = e.data.length;
+                                const res:QApi=await this.file.search('pid',item.id).catch(e=>{
+                                    reject(e);
                                 })
+                                temp.quantities=res.data.length;
                             } else {
                                 temp.quantities = 0;
                             }
@@ -486,16 +499,6 @@ export default class VFS extends ATree implements IVFS, ICommand {
         return new Promise((resolve, reject) => {
             this.is(name).then((e:IFileFormat)=>{
                 if (e.type==='d'){
-                    console.log(e);
-                    console.log(
-                        e.id,
-                        e.quantities,
-                        e.date,
-                        e.name,
-                        e.size,
-                        e.time,
-                        e.type
-                    );
                     if (e.quantities===0){
                         this.file.delete(e.id).then(e=>{
                             resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.rmdirSuccess, e))
@@ -508,8 +511,8 @@ export default class VFS extends ATree implements IVFS, ICommand {
                 }else{
                     reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.rmdirNotError, e, VFSL.rmdirNotError, CodeE.Error))
                 }
-            }).catch(()=>{
-
+            }).catch((e)=>{
+                reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.fileNotFound, e, VFSL.fileNotFound, CodeE.Error))
             })
         })
     }
