@@ -69,4 +69,27 @@
 
 import VFS from "./kernel/VFS/VFS.js";
 
-let vfs = new VFS();
+setTimeout(()=>{
+    let vfs = new VFS();
+    vfs.init().then(()=>{
+        // vfs.ls().then(e=>{
+        //     console.log(e);
+        // })
+        // vfs.ls('ali').then(e=>{
+        //     console.log(e);
+        // })
+        // vfs.ll().then(e=>{
+        //     console.log(e);
+        // })
+        // vfs.cd('/test4').then(e=>{
+        //     console.log(e);
+        //     console.log(vfs.pwd());
+        //     vfs.ls().then(e=>{
+        //         console.log(e);
+        //     })
+        // })
+        vfs.rmdir('test5655566').then(e=>{
+            console.log(e);
+        })
+    })
+},100)

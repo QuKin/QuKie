@@ -79,7 +79,7 @@ export default abstract class ATree implements IATree {
      * @param {any[]} val 键值
      * @param {string} [key=id] 键名
      */
-    is(data: any[], val: any[], key: string = 'id'): boolean {
+    isTree(data: any[], val: any[], key: string = 'id'): boolean {
         const queue = JSON.parse(JSON.stringify(data))
         while (queue.length) {
             const len = queue.length

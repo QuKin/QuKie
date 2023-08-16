@@ -27,6 +27,41 @@ export const getDateTime = (date = new Date()) => {
     return Api(year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分" + second + "秒");
 };
 /**
+ * 获取格式化时间-日期
+ * @name getDate
+ * @param {Date} [date=new Date()] 时间
+ * @returns {QApi}
+ */
+export const getDate = (date = new Date()) => {
+    let year = date.getFullYear(), month = date.getMonth() + 1, day = date.getDate();
+    month = checkTime(month);
+    day = checkTime(day);
+    function checkTime(i) {
+        if (i < 10)
+            i = "0" + i;
+        return i;
+    }
+    return Api(year + "年" + month + "月" + day + "日");
+};
+/**
+ * 获取格式化时间-时间
+ * @name getTime
+ * @param {Date} [date=new Date()] 时间
+ * @returns {QApi}
+ */
+export const getTime = (date = new Date()) => {
+    let hour = date.getHours(), minute = date.getMinutes(), second = date.getSeconds();
+    hour = checkTime(hour);
+    minute = checkTime(minute);
+    second = checkTime(second);
+    function checkTime(i) {
+        if (i < 10)
+            i = "0" + i;
+        return i;
+    }
+    return Api(hour + "时" + minute + "分" + second + "秒");
+};
+/**
  * 判断邮箱是否正确
  * @name isEmail
  * @param {string} email 邮件
@@ -67,5 +102,14 @@ export const random = (min, max) => {
  */
 export const trim = (str) => {
     return Api(str.replace(/(^\s*)|(\s*$)/g, ""));
+};
+/**
+ * 是否为空
+ * @name isNull
+ * @param {string} str 字符串
+ * @returns {QApi}
+ */
+export const isNull = (str) => {
+    return Api(trim(str) === '');
 };
 //# sourceMappingURL=QCommon.js.map

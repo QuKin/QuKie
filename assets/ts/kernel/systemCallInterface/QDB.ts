@@ -126,7 +126,6 @@ export default class QDB implements IQDB {
             this.storeName = storeName;
             return QAL(window.LogIntensityE.SuccessError, QDBL.type, QDBL.setStoreNameSuccess, this.storeName)
         } else {
-            console.log(storeName, this.qrange.show());
             return QAL(window.LogIntensityE.Error, QDBL.type, PublicL.RangeError, b, QDBL.isErr, CodeE.RangeError)
         }
     }
@@ -371,10 +370,10 @@ export default class QDB implements IQDB {
      * 通过索引和游标查询
      * 输出可多个值
      * @param {string} indexName 索引名称
-     * @param {string} indexValue 索引值
+     * @param {string|number} indexValue 索引值
      * @returns {Promise}
      */
-    search(indexName: string, indexValue: string) {
+    search(indexName: string, indexValue: string|number) {
         return new Promise((resolve, reject) => {
             let list = [];
             const store = this.db.transaction(this.getStoreName(), "readwrite").objectStore(this.getStoreName()); // 仓库对象

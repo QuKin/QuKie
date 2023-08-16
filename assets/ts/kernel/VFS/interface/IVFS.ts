@@ -9,5 +9,14 @@
 import QDB from "../../systemCallInterface/QDB.js";
 
 export interface IVFS{
-    file: QDB
+    file: QDB;
+    path: string;
+
+    /**
+     * 判断type是否存在
+     * @param {string} type 类型
+     * @param {string[]} arr 类型数组
+     * @returns {boolean}
+     */
+    isType(type: string, arr: string[]): boolean
 }

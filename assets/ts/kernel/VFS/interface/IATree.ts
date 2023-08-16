@@ -36,7 +36,7 @@ export interface IATree {
      * @param {any[]} val 键值
      * @param {string} [key=id] 键名
      */
-    is(data: any[], val: any[], key: string): boolean
+    isTree(data: any[], val: any[], key: string): boolean
 
     /**
      * 树形结构转换扁平化

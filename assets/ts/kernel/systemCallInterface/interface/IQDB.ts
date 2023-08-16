@@ -61,10 +61,10 @@ export interface IQDB {
      * 通过索引和游标查询
      * 输出可多个值
      * @param {string} indexName 索引名称
-     * @param {string} indexValue 索引值
+     * @param {string|number} indexValue 索引值
      * @returns {Promise}
      */
-    search(indexName: string, indexValue: string)
+    search(indexName: string, indexValue: string|number)
 
     /**
      * 通过索引和游标分页查询

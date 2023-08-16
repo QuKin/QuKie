@@ -8,10 +8,16 @@
  */
 export interface ICommand {
     /**
+     * 判断当前是否存在该目录/文件
+     * @param {string} val 目录或文件名称
+     */
+    is(val: string);
+
+    /**
      * 输出当前目录的列表
      * @returns {object[]}
      */
-    ls(): object[];
+    ls();
 
     /**
      * 根据类型，输出当前目录的列表<br>
@@ -21,34 +27,31 @@ export interface ICommand {
      * @param {string} type 类型 a|l|i
      * @returns {object[]}
      */
-    ls(type: string): object[];
+    ls(type: string);
 
     /**
      * 是ls('l')的快速方式
      * @returns {object[]}
      */
-    ll(): object[];
+    ll();
 
     /**
      * 进入或者退出目录
      * @param {string} path 路径
-     * @returns {boolean}
      */
-    cd(path: string): boolean
+    cd(path: string)
 
     /**
      * 创建目录
      * @param {string} name 目录名称
-     * @returns {boolean}
      */
-    mkdir(name: string): boolean;
+    mkdir(name: string);
 
     /**
      * 删除空目录
      * @param {string} name 目录名称
-     * @returns {boolean}
      */
-    rmdir(name: string): boolean;
+    rmdir(name: string);
 
     /**
      * 复制目录或文件
@@ -110,7 +113,7 @@ export interface ICommand {
      * 查看当前目录以及子目录的大小
      * @returns {object[]}
      */
-    du(): object[];
+    du();
 
     /**
      * 展示当前文件的内容
@@ -136,7 +139,7 @@ export interface ICommand {
      * @param {string} name 文件名称
      * @returns {object[]}
      */
-    find(name: string): object[];
+    find(name: string);
 
     /**
      * 自定义目录路径包括所有子目录下查找文件
@@ -144,11 +147,12 @@ export interface ICommand {
      * @param {string} path 目录路径
      * @returns {object[]}
      */
-    find(name: string, path: string): object[];
+    find(name: string, path: string);
 
     /**
      * 创建文件
      * @param {string} name 文件名
+     * @returns {boolean}
      */
     touch(name: string): boolean;
 }

@@ -75,7 +75,7 @@ export default class ATree {
      * @param {any[]} val 键值
      * @param {string} [key=id] 键名
      */
-    is(data, val, key = 'id') {
+    isTree(data, val, key = 'id') {
         const queue = JSON.parse(JSON.stringify(data));
         while (queue.length) {
             const len = queue.length;
