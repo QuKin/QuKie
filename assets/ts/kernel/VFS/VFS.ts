@@ -424,17 +424,17 @@ export default class VFS extends ATree implements IVFS, ICommand {
                     }).then(e=>{
                         resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.mkdirSuccess, e))
                     }).catch(e=>{
-                        reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdir2Error, e, VFSL.mkdir2Error, CodeE.Error))
+                        reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdirError, e, VFSL.mkdirError, CodeE.Error))
                     })
                 }).catch(e=>{
-                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdir2Error, e, VFSL.mkdir2Error, CodeE.Error))
+                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdirError, e, VFSL.mkdirError, CodeE.Error))
                 })
             }
             this.is(name).then((e:IFileFormat)=>{
                 if (e.type==='f'){
                     add();
                 }else{
-                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdirError, e, VFSL.mkdirError, CodeE.Error))
+                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdirRemainError, e, VFSL.mkdirRemainError, CodeE.Error))
                 }
             }).catch(()=>{
                 // 没有该目录就创建
