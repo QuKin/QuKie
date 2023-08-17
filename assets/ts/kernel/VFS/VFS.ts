@@ -349,7 +349,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
             this.isPath(pathTemp).then((e: QApi) => {
                 if (e.data.type === 'd') {
                     this.path = pathTemp;
-                    resolve(e);
+                    resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cdSuccess, e));
                 } else {
                     reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.cdError, pathTemp, VFSL.cdError, CodeE.Error))
                 }
@@ -459,7 +459,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
                             // 判断是否是目录
                             if (item.type === 'd') {
                                 const res: QApi = await this.file.search('pid', item.id).catch(e => {
-                                    reject(e);
+                                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.lsSearchError, e, VFSL.lsSearchError, CodeE.Error))
                                 })
                                 temp.quantities = res.data.length;
                             } else {
@@ -478,9 +478,9 @@ export default class VFS extends ATree implements IVFS, ICommand {
                     temp.name = item.name;
                     data.push(temp)
                 }
-                resolve(data);
+                resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.lsSuccess, data))
             }).catch((e: QApi) => {
-                reject(e);
+                reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.lsSearchError, e, VFSL.lsSearchError, CodeE.Error))
             })
         })
     }

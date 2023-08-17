@@ -28,5 +28,7 @@ export var VFSL;
     VFSL["isFileSearchError"] = "isFile\u65B9\u6CD5\u641C\u7D22\u5931\u8D25";
     VFSL["isFileNotFound"] = "\u8BE5\u6587\u4EF6/\u76EE\u5F55\u4E0D\u5B58\u5728";
     VFSL["isFileSuccess"] = "\u8BE5\u6587\u4EF6/\u76EE\u5F55\u5B58\u5728";
+    VFSL["lsSearchError"] = "ls\u65B9\u6CD5\u641C\u7D22\u5931\u8D25";
+    VFSL["lsSuccess"] = "\u5217\u8868\u6570\u636E\u83B7\u53D6\u6210\u529F";
 })(VFSL || (VFSL = {}));
 //# sourceMappingURL=VFSL.js.map

@@ -27,4 +27,6 @@ export enum VFSL {
     isFileSearchError = 'isFile方法搜索失败',
     isFileNotFound = '该文件/目录不存在',
     isFileSuccess = '该文件/目录存在',
+    lsSearchError='ls方法搜索失败',
+    lsSuccess='列表数据获取成功',
 }
