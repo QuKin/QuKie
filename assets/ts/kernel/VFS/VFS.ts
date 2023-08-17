@@ -294,11 +294,11 @@ export default class VFS extends ATree implements IVFS, ICommand {
             }
             let pathTemp: string = path;
             // 没有任何/，说明当前目录进入到下一层目录
-            if (path.indexOf('/')===-1){
-                if (this.path==='/'){
-                    pathTemp=this.path+path;
-                }else{
-                    pathTemp=this.path+'/'+path;
+            if (path.indexOf('/') === -1) {
+                if (this.path === '/') {
+                    pathTemp = this.path + path;
+                } else {
+                    pathTemp = this.path + '/' + path;
                 }
             }
             // 判断路径最后一个字符是否是/
@@ -553,7 +553,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
      */
     pwd(): string {
         // 判断路径最后一个字符是否是/
-        if (this.path.endsWith('/')) this.path=this.path.slice(0,-1);
+        if (this.path.endsWith('/')) this.path = this.path.slice(0, -1);
         return this.path;
     }
 
