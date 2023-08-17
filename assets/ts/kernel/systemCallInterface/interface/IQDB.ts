@@ -37,6 +37,12 @@ export interface IQDB {
     add(data: object)
 
     /**
+     * 获取DB
+     * @returns {any}
+     */
+    getDB(): any;
+
+    /**
      * 通过主键读取数据
      * @param {number|string} key 主键值
      * @returns {Promise}
@@ -64,7 +70,7 @@ export interface IQDB {
      * @param {string|number} indexValue 索引值
      * @returns {Promise}
      */
-    search(indexName: string, indexValue: string|number)
+    search(indexName: string, indexValue: string | number)
 
     /**
      * 通过索引和游标分页查询

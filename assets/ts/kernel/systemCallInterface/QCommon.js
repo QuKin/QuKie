@@ -110,6 +110,6 @@ export const trim = (str) => {
  * @returns {QApi}
  */
 export const isNull = (str) => {
-    return Api(trim(str) === '');
+    return Api(trim(str).data === "");
 };
 //# sourceMappingURL=QCommon.js.map

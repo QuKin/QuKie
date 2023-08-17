@@ -15,5 +15,6 @@ export var publicL;
     publicL["TypeError"] = "\u7C7B\u578B\u9519\u8BEF";
     publicL["RangeError"] = "\u8303\u56F4\u9519\u8BEF";
     publicL["ParametricError"] = "\u53C2\u6570\u9519\u8BEF";
+    publicL["EmptyValue"] = "\u4E0D\u80FD\u4E3A\u7A7A\u503C";
 })(publicL || (publicL = {}));
 //# sourceMappingURL=publicL.js.map

@@ -14,4 +14,5 @@ export enum publicL {
     TypeError = '类型错误',
     RangeError = '范围错误',
     ParametricError = '参数错误',
+    EmptyValue = '不能为空值',
 }

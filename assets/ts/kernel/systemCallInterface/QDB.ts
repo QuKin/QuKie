@@ -253,6 +253,14 @@ export default class QDB implements IQDB {
     }
 
     /**
+     * 获取DB
+     * @returns {any}
+     */
+    getDB(): any {
+        return this.db;
+    }
+
+    /**
      * 通过游标获取全部数据
      * @returns {Promise}
      */
@@ -373,7 +381,7 @@ export default class QDB implements IQDB {
      * @param {string|number} indexValue 索引值
      * @returns {Promise}
      */
-    search(indexName: string, indexValue: string|number) {
+    search(indexName: string, indexValue: string | number) {
         return new Promise((resolve, reject) => {
             let list = [];
             const store = this.db.transaction(this.getStoreName(), "readwrite").objectStore(this.getStoreName()); // 仓库对象

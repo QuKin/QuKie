@@ -8,7 +8,7 @@
  */
 import QDB from "../../systemCallInterface/QDB.js";
 
-export interface IVFS{
+export interface IVFS {
     file: QDB;
     path: string;
 
@@ -19,4 +19,16 @@ export interface IVFS{
      * @returns {boolean}
      */
     isType(type: string, arr: string[]): boolean
+
+    /**
+     * 判断当前是否存在该路径
+     * @param {string} path 路径
+     */
+    isPath(path: string)
+
+    /**
+     * 判断当前是否存在该目录/文件
+     * @param {string} file 目录或文件名称
+     */
+    isFile(file: string)
 }

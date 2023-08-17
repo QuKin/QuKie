@@ -131,5 +131,5 @@ export const trim = (str: string): QApi => {
  * @returns {QApi}
  */
 export const isNull = (str: string): QApi => {
-    return Api(trim(str) === '');
+    return Api(trim(str).data === "");
 }

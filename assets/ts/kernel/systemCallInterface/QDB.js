@@ -236,6 +236,13 @@ export default class QDB {
         });
     }
     /**
+     * 获取DB
+     * @returns {any}
+     */
+    getDB() {
+        return this.db;
+    }
+    /**
      * 通过游标获取全部数据
      * @returns {Promise}
      */

@@ -28,6 +28,7 @@ await import("../../language/" + getConfig('Language') + "/kernel/VFS/VFSL.js").
 export default class VFS extends ATree implements IVFS, ICommand {
     file: QDB;
     path: string = '/';
+
     // fileData: any[];
 
     constructor() {
@@ -39,7 +40,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
      * 初始化
      * @param {string} [storeName=home] 仓库名
      */
-    init(storeName:string='home') {
+    init(storeName: string = 'home') {
         return new Promise((resolve, reject) => {
             this.file = new QDB({
                 name: 'file',
@@ -97,7 +98,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
                 this.file.setStoreName(storeName);
                 // this.test();
                 resolve(true);
-            }).catch(()=>{
+            }).catch(() => {
                 reject(false);
             })
         })
@@ -180,36 +181,77 @@ export default class VFS extends ATree implements IVFS, ICommand {
      * 判断当前是否存在该目录/文件/路径
      * @param {string} val 目录或文件名称或路径
      */
-    is(val: string){
+    is(val: string) {
         return new Promise((resolve, reject) => {
-            if (val.indexOf('/')===-1){
+            if (val.indexOf('/') === -1) {
                 // 目录或文件名称
-                this.ls('li').then(e=>{
-                    let len:number=e.length;
-                    for (let i = 0; i < len; i++) {
-                        if (e[i].name===val){
-                            resolve(e[i]);
-                        }
-                    }
-                    reject(false);
+                this.isFile(val).then(e => {
+                    resolve(e);
+                }).catch(e => {
+                    reject(e);
                 })
-            }else{
+            } else {
                 // 路径
-
-                // 判断字符串最后一个字符是否存在
-                if (!val.endsWith('/')) val+='/';
-                this.file.getIndex('path', val).then((e: QApi) => {
-                    if (e.data.length===0){
-                        reject(false);
-                    }else{
-                        this.file.getKey(e.data.pid).then(e=>{
-                            resolve(e);
-                        })
-                    }
-                }).catch(e=>{
+                this.isPath(val).then(e => {
+                    resolve(e);
+                }).catch(e => {
                     reject(e);
                 })
             }
+        })
+    }
+
+    /**
+     * 判断当前是否存在该目录/文件
+     * @param {string} file 目录或文件名称
+     */
+    isFile(file: string) {
+        return new Promise((resolve, reject) => {
+            // 目录或文件名称
+            this.ls('li').then(e => {
+                let len: number = e.length;
+                for (let i = 0; i < len; i++) {
+                    if (e[i].name === file) {
+                        // 必须加return否则会继续
+                        return resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.isFileSuccess, e[i]));
+                    }
+                }
+                reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.isFileNotFound, false, VFSL.isFileNotFound, CodeE.NotFound))
+            }).catch(e => {
+                reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.isFileSearchError, e, VFSL.isFileSearchError, CodeE.Error))
+            })
+        })
+    }
+
+    /**
+     * 判断当前是否存在该路径
+     * @param {string} path 路径
+     */
+    isPath(path: string) {
+        return new Promise((resolve, reject) => {
+            // 判断字符串最后一个字符是否存在
+            if (!path.endsWith('/')) path += '/';
+            // 当最后一个本身是一个目录
+            let arr: string[] = path.split('/');
+            // 最后一个目录名称
+            let downDir: string = arr.splice(arr.length - 2, 1)[0]
+            let pathTemp: string = arr.join('/');
+            this.file.search('path', pathTemp).then((e: QApi) => {
+                if (e.data.length === 0) {
+                    // 该路径不存在
+                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.isPathNotFound, e, VFSL.isPathNotFound, CodeE.NotFound))
+                } else {
+                    for (const item of e.data) {
+                        if (item.name === downDir) {
+                            return resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.isPathSuccess, item));
+                        }
+                    }
+                    // 该路径不存在
+                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.isPathNotFound, e, VFSL.isPathNotFound, CodeE.NotFound))
+                }
+            }).catch(e => {
+                reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.isPathSearchError, e, VFSL.isPathSearchError, CodeE.Error))
+            })
         })
     }
 
@@ -242,35 +284,72 @@ export default class VFS extends ATree implements IVFS, ICommand {
     /**
      * 进入或者退出目录
      * @param {string} path 路径
-     * /
-     * /test/
-     * /test1/test2/
-     * test3/
-     * ./test4/
-     * ../
-     * ../../
-     * ../test2/
      */
     cd(path: string) {
         return new Promise((resolve, reject) => {
+            // 根目录直接输出
             if (path === '/') {
-                this.path = '/';
-                return true;
+                this.path = path;
+                resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cdSuccess, this.path));
             }
-            let temp:string=path;
-            if (path.indexOf('/')!==0){
-
+            let pathTemp: string = path;
+            // 没有任何/，说明当前目录进入到下一层目录
+            if (path.indexOf('/')===-1){
+                pathTemp=this.path+'/'+path;
             }
             // 判断路径最后一个字符是否是/
-            if (!path.endsWith('/')) path+='/';
-            this.is(path).then((e:QApi)=>{
-                if (e.data.type==='d'){
-                    this.path=path;
-                    resolve(e);
-                }else{
-                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.cdError, path, VFSL.cdError, CodeE.Error))
+            if (!path.endsWith('/')) path += '/';
+            // 当前目录
+            if (path.indexOf('./') === 0) {
+                // 去掉"./"，进行拼接原路径
+                pathTemp = this.path + pathTemp.substr(2);
+            }
+            // 返回上一级目录
+            if (path.indexOf('../') === 0) {
+                let arrPathTemp: string[] = path.split('/');
+                // 计算多少个../
+                let arrPathTempNum: number = 0;
+                for (let i = 0; i < arrPathTemp.length; i++) {
+                    if (arrPathTemp[i] === '..') {
+                        arrPathTempNum++;
+                        arrPathTemp.splice(i, 1);
+                        i--;
+                        continue;
+                    }
+                    // 防止出现："../test/../test"
+                    break;
                 }
-            }).catch((e)=>{
+
+                let arrPath: string[] = this.path.split('/');
+                // 去掉后面的''
+                if (arrPath[arrPath.length - 1] === '') arrPath.pop();
+                // 判断../是否超出
+                if (arrPath.length <= arrPathTempNum) {
+                    // 超出或等于直接到根目录
+                    pathTemp = '/'
+                } else {
+                    // 未超出删除指定大小，从最后开始删
+                    arrPath = arrPath.slice(0, -arrPathTempNum);
+                    // 把上面删掉的''给补回来
+                    arrPath.push('');
+
+                    pathTemp = arrPath.join('/') + arrPathTemp.join('/');
+                }
+                if (pathTemp === '/') {
+                    this.path = pathTemp;
+                    resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cdSuccess, this.path));
+                }
+            }
+
+
+            this.isPath(pathTemp).then((e: QApi) => {
+                if (e.data.type === 'd') {
+                    this.path = pathTemp;
+                    resolve(e);
+                } else {
+                    reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.cdError, pathTemp, VFSL.cdError, CodeE.Error))
+                }
+            }).catch((e) => {
                 reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.cdIsError, e, VFSL.cdIsError, CodeE.NotFound))
             })
         })
@@ -375,10 +454,10 @@ export default class VFS extends ATree implements IVFS, ICommand {
                         if (type.indexOf('l') !== -1) {
                             // 判断是否是目录
                             if (item.type === 'd') {
-                                const res:QApi=await this.file.search('pid',item.id).catch(e=>{
+                                const res: QApi = await this.file.search('pid', item.id).catch(e => {
                                     reject(e);
                                 })
-                                temp.quantities=res.data.length;
+                                temp.quantities = res.data.length;
                             } else {
                                 temp.quantities = 0;
                             }
@@ -408,10 +487,10 @@ export default class VFS extends ATree implements IVFS, ICommand {
      */
     mkdir(name: string) {
         return new Promise((resolve, reject) => {
-            const add=()=>{
-                this.file.getIndex('path',this.path).then((e:QApi)=>{
-                    let pid:number=0;
-                    if (this.path!=='/') pid = e.data.id;
+            const add = () => {
+                this.file.getIndex('path', this.path).then((e: QApi) => {
+                    let pid: number = 0;
+                    if (this.path !== '/') pid = e.data.id;
                     this.file.add({
                         pid: pid,
                         path: this.path,
@@ -421,22 +500,22 @@ export default class VFS extends ATree implements IVFS, ICommand {
                         size: 0,
                         time: getTime().data,
                         date: getDate().data
-                    }).then(e=>{
+                    }).then(e => {
                         resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.mkdirSuccess, e))
-                    }).catch(e=>{
+                    }).catch(e => {
                         reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdirError, e, VFSL.mkdirError, CodeE.Error))
                     })
-                }).catch(e=>{
+                }).catch(e => {
                     reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdirError, e, VFSL.mkdirError, CodeE.Error))
                 })
             }
-            this.is(name).then((e:IFileFormat)=>{
-                if (e.type==='f'){
+            this.is(name).then((e: IFileFormat) => {
+                if (e.type === 'f') {
                     add();
-                }else{
+                } else {
                     reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.mkdirRemainError, e, VFSL.mkdirRemainError, CodeE.Error))
                 }
-            }).catch(()=>{
+            }).catch(() => {
                 // 没有该目录就创建
                 add();
             })
@@ -497,21 +576,21 @@ export default class VFS extends ATree implements IVFS, ICommand {
      */
     rmdir(name: string) {
         return new Promise((resolve, reject) => {
-            this.is(name).then((e:IFileFormat)=>{
-                if (e.type==='d'){
-                    if (e.quantities===0){
-                        this.file.delete(e.id).then(e=>{
+            this.is(name).then((e: IFileFormat) => {
+                if (e.type === 'd') {
+                    if (e.quantities === 0) {
+                        this.file.delete(e.id).then(e => {
                             resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.rmdirSuccess, e))
-                        }).catch(e=>{
+                        }).catch(e => {
                             reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.rmdirError, e, VFSL.rmdirError, CodeE.Error))
                         })
-                    }else{
+                    } else {
                         reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.rmdirQuantitiesError, e, VFSL.rmdirQuantitiesError, CodeE.Error))
                     }
-                }else{
+                } else {
                     reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.rmdirNotError, e, VFSL.rmdirNotError, CodeE.Error))
                 }
-            }).catch((e)=>{
+            }).catch((e) => {
                 reject(QAL(window.LogIntensityE.Error, VFSL.type, VFSL.fileNotFound, e, VFSL.fileNotFound, CodeE.Error))
             })
         })
