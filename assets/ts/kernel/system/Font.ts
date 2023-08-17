@@ -8,7 +8,7 @@
  */
 
 import {QApi} from "../systemCallInterface/QApi.js";
-import {FontConfig} from "../../../font/fontConfig.js";
+import {FontConfig} from "../../config/fontConfig.js";
 import {QAL} from "../systemCallInterface/_QCommon.js";
 import {FontL} from "../../language/zh_CN/kernel/system/FontL.js";
 
