@@ -473,6 +473,9 @@ export default class VFS extends ATree {
      * @returns {string}
      */
     pwd() {
+        // 判断路径最后一个字符是否是/
+        if (this.path.endsWith('/'))
+            this.path = this.path.slice(0, -1);
         return this.path;
     }
     rm(path, type) {
