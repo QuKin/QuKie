@@ -1,0 +1,23 @@
+{
+  "include": ["assets/ts/**/*.ts", "assets/ts/**/*.d.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": true,
+    // 开启增量编译模式
+    "incremental": true,
+    "tsBuildInfoFile": ".temp/tsbuildinfo",
+    // 指定根文件夹，用于解析非相对模块名称
+    "rootDir": "assets/ts",
+    "outDir": "assets/js"
+  },
+  "watchOptions": {
+    "watchFile": "useFsEvents",
+    "watchDirectory": "useFsEvents",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": ["**/node_modules"],
+    "excludeFiles": []
+  }
+}
