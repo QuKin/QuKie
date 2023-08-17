@@ -281,7 +281,12 @@ export default class VFS extends ATree {
             let pathTemp = path;
             // 没有任何/，说明当前目录进入到下一层目录
             if (path.indexOf('/') === -1) {
-                pathTemp = this.path + '/' + path;
+                if (this.path === '/') {
+                    pathTemp = this.path + path;
+                }
+                else {
+                    pathTemp = this.path + '/' + path;
+                }
             }
             // 判断路径最后一个字符是否是/
             if (!path.endsWith('/'))
