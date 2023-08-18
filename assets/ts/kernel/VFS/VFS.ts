@@ -255,7 +255,14 @@ export default class VFS extends ATree implements IVFS, ICommand {
      * @param {string} path 路径
      * @returns {any}
      */
-    cat(path: string): any {
+    cat(path: string) {
+        return new Promise((resolve, reject) => {
+            this.is(path).then((e:QApi)=>{
+                resolve(e.data.file);
+            }).catch(e=>{
+                reject(e);
+            })
+        })
     }
 
     /**
@@ -275,12 +282,12 @@ export default class VFS extends ATree implements IVFS, ICommand {
 
 
             this.isPath(path).then((e: QApi) => {
-                if (e.data==='/'){
+                if (e.data === '/') {
                     this.path = '/';
                     return resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cdSuccess, e));
                 }
                 if (e.data.type === 'd') {
-                    this.path = e.data.path+e.data.name;
+                    this.path = e.data.path + e.data.name;
                     if (!this.path.endsWith('/')) this.path += '/';
                     return resolve(QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cdSuccess, e));
                 } else {
@@ -425,9 +432,9 @@ export default class VFS extends ATree implements IVFS, ICommand {
      */
     mkdir(name: string) {
         return new Promise((resolve, reject) => {
-            this.add(name,'d',VFSL.mkdirSuccess,VFSL.mkdirError,VFSL.mkdirRemainError).then(e=>{
+            this.add(name, 'd', VFSL.mkdirSuccess, VFSL.mkdirError, VFSL.mkdirRemainError).then(e => {
                 resolve(e);
-            }).catch(e=>{
+            }).catch(e => {
                 reject(e);
             })
         })
@@ -519,9 +526,9 @@ export default class VFS extends ATree implements IVFS, ICommand {
      */
     touch(name: string) {
         return new Promise((resolve, reject) => {
-            this.add(name,'f',VFSL.touchSuccess,VFSL.touchError,VFSL.touchRemainError).then(e=>{
+            this.add(name, 'f', VFSL.touchSuccess, VFSL.touchError, VFSL.touchRemainError).then(e => {
                 resolve(e);
-            }).catch(e=>{
+            }).catch(e => {
                 reject(e);
             })
         })
@@ -536,7 +543,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
      * @param {string} errorMessage2 存在错误消息
      * @private
      */
-    private add(name:string,type:string,successMessage:string,errorMessage1:string,errorMessage2:string){
+    private add(name: string, type: string, successMessage: string, errorMessage1: string, errorMessage2: string) {
         return new Promise((resolve, reject) => {
             let ifnc: QApi = isFileNameCorrect(name);
             if (!ifnc.data) {
@@ -567,10 +574,10 @@ export default class VFS extends ATree implements IVFS, ICommand {
                 })
             }
             this.is(name).then((e: QApi) => {
-                if (e.data.type !== type && e.data.name!==name) {
+                if (e.data.type !== type && e.data.name !== name) {
                     add();
                 } else {
-                    return reject(QAL(window.LogIntensityE.Error, VFSL.type,errorMessage2, e,errorMessage2, CodeE.Error))
+                    return reject(QAL(window.LogIntensityE.Error, VFSL.type, errorMessage2, e, errorMessage2, CodeE.Error))
                 }
             }).catch(() => {
                 // 没有就创建
