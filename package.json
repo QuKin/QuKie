@@ -1,14 +1,19 @@
 {
   "name": "qukie",
-  "version": "1.0.0",
+  "version": "0.0.1-alpha",
   "description": "qukie",
   "author": "qukie",
+  "contributors": [
+    "huankong233"
+  ],
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
     "dev": "tsc -w",
+    "prettier:check": "prettier --check public/**/*.{ts,js,css,html}",
+    "prettier:write": "prettier --write public/**/*.{ts,js,css,html}",
     "commitlint": "commitlint --config commitlint.config.cjs -e -V",
-    "commit": "git add . && cz-customizable && git push",
+    "commit": "pnpm run prettier:write && git add . && cz-customizable && git push",
     "pull": "git pull",
     "prepare": "husky install"
   },
@@ -18,7 +23,8 @@
     },
     "cz-customizable": {
       "config": ".cz-config.cjs"
-    }
+    },
+    "prettier": ".prettierrc.json"
   },
   "keywords": [],
   "dependencies": {
@@ -31,6 +37,7 @@
     "commitlint-config-cz": "^0.13.3",
     "commitlint-config-git-commit-emoji": "^1.0.0",
     "cz-customizable": "^7.0.0",
-    "husky": "^8.0.3"
+    "husky": "^8.0.3",
+    "prettier": "^3.0.2"
   }
 }

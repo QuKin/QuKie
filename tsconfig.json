@@ -1,5 +1,5 @@
 {
-  "include": ["assets/ts/**/*.ts", "assets/ts/**/*.d.ts"],
+  "include": ["public/assets/ts/**/*.ts", "public/assets/ts/**/*.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "module": "esnext",
@@ -9,8 +9,8 @@
     "incremental": true,
     "tsBuildInfoFile": ".temp/tsbuildinfo",
     // 指定根文件夹，用于解析非相对模块名称
-    "rootDir": "assets/ts",
-    "outDir": "assets/js"
+    "rootDir": "public/assets/ts",
+    "outDir": "public/assets/js"
   },
   "watchOptions": {
     "watchFile": "useFsEvents",
