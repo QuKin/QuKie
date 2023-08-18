@@ -6,10 +6,31 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "commitlint": "commitlint --config commitlint.config.cjs -e -V",
+    "commit": "git add . && cz-customizable && git push",
+    "pull": "git pull",
+    "prepare": "husky install"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": ".cz-config.cjs"
+    }
   },
   "keywords": [],
   "dependencies": {
     "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.0",
+    "@commitlint/config-conventional": "^17.7.0",
+    "commitizen": "^4.3.0",
+    "commitlint-config-cz": "^0.13.3",
+    "commitlint-config-git-commit-emoji": "^1.0.0",
+    "cz-customizable": "^7.0.0",
+    "husky": "^8.0.3"
   }
 }
