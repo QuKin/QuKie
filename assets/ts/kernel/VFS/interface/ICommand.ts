@@ -152,7 +152,6 @@ export interface ICommand {
     /**
      * 创建文件
      * @param {string} name 文件名
-     * @returns {boolean}
      */
-    touch(name: string): boolean;
+    touch(name: string);
 }
