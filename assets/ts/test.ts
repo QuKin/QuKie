@@ -104,8 +104,3 @@ setTimeout(() => {
         // await vfs.mkdir('test7');
     })
 }, 100)
-
-
-import QTime from "./kernel/systemCallInterface/QTime.js";
-let qTime = new QTime();
-console.log(qTime.format());

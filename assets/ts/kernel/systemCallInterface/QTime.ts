@@ -118,28 +118,6 @@ export default class QTime implements IQTime {
     }
 
     /**
-     * 日期格式化输出
-     * @param {string} format 格式化
-     * @returns {string}
-     */
-    dateFormat(format: string = getConfig('timeFormat')): string {
-        return format.replace(/yyyy/g, this.year.toString())
-            .replace(/MM/g, this.checkTime(this.month).toString() || this.month.toString())
-            .replace(/dd/g, this.checkTime(this.day).toString() || this.day.toString())
-    }
-
-    /**
-     * 时间格式化输出
-     * @param {string} format 格式化
-     * @returns {string}
-     */
-    timeFormat(format: string = getConfig('timeFormat')): string {
-        return format.replace(/HH/g, this.checkTime(this.hour).toString() || this.hour.toString())
-            .replace(/mm/g, this.checkTime(this.min).toString() || this.min.toString())
-            .replace(/ss/g, this.checkTime(this.sec).toString() || this.sec.toString());
-    }
-
-    /**
      * 设置补零
      * @name setZero
      * @param {boolean} tf 布尔值是否

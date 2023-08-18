@@ -8,7 +8,6 @@
 
 import {QApi} from "./QApi.js";
 import {typeE} from "../mode/typeE.js";
-import {isEmptyValue} from "./QCommon.js";
 
 let publicL = null;
 
@@ -48,9 +47,6 @@ export const QAL = (
  * @returns {any}
  */
 export const getConfig = (key: string, type: typeE = typeE.json): any => {
-    if (isEmptyValue(key).data) {
-        return false;
-    }
     let data: any = JSON.parse(localStorage.getItem('Config'))[key];
     switch (type) {
         case typeE.int:

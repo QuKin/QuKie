@@ -9,8 +9,8 @@
 import {QApi, Api} from './QApi.js';
 import {typeE} from "../mode/typeE.js";
 import {getConfig, QAL} from "./_QCommon.js";
-import {isEmptyValue} from "./QCommon";
-import {CodeE} from "../mode/codeE";
+import {isEmptyValue} from "./QCommon.js";
+import {CodeE} from "../mode/codeE.js";
 
 let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
 let {QStorageL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QStorageL.js")

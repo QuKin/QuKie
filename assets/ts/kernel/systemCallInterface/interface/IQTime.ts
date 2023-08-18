@@ -79,20 +79,6 @@ export interface IQTime {
     format(format: string): string
 
     /**
-     * 日期格式化输出
-     * @param {string} format 格式化
-     * @returns {string}
-     */
-    dateFormat(format: string): string
-
-    /**
-     * 时间格式化输出
-     * @param {string} format 格式化
-     * @returns {string}
-     */
-    timeFormat(format: string): string
-
-    /**
      * 设置补零
      * @name setZero
      * @param {boolean} tf 布尔值是否

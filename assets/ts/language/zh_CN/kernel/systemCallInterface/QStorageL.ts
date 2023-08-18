@@ -7,6 +7,6 @@
  * @description     QStorage语言
  * @Date            2023/8/18 9:16
  */
-export enum QStorageL{
-    type='本地storage',
+export enum QStorageL {
+    type = '本地storage',
 }

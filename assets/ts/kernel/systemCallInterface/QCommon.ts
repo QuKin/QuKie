@@ -6,8 +6,13 @@
  * @Date            2023/8/7 7:49
  */
 
-import {QApi, Api} from './QApi.js';
+import {Api, QApi} from './QApi.js';
 import QTime from "./QTime.js";
+import {getConfig} from "./_QCommon.js";
+import {CodeE} from "../mode/codeE.js";
+
+let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
+let {QCommonL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QCommonL.js")
 
 /**
  * 获取格式化时间
@@ -26,7 +31,7 @@ export const getDateTime = (date: Date = new Date()): QApi => {
  * @returns {QApi}
  */
 export const getDate = (date: Date = new Date()): QApi => {
-    return Api(new QTime(date).dateFormat())
+    return Api(new QTime(date).format('yyyy-MM-dd'))
 }
 
 /**
@@ -36,7 +41,7 @@ export const getDate = (date: Date = new Date()): QApi => {
  * @returns {QApi}
  */
 export const getTime = (date: Date = new Date()): QApi => {
-    return Api(new QTime(date).timeFormat())
+    return Api(new QTime(date).format('HH:mm:ss'))
 }
 
 /**
@@ -93,4 +98,20 @@ export const trim = (str: string): QApi => {
  */
 export const isEmptyValue = (str: string): QApi => {
     return Api(trim(str).data === "");
+}
+
+/**
+ * 判断文件名是否正确
+ * @name isFileNameCorrect
+ * @param {string} str 文件名
+ * @returns {QApi}
+ */
+export const isFileNameCorrect = (str: string): QApi => {
+    if (isEmptyValue(str).data){
+        return Api(false,publicL.EmptyValue,CodeE.EmptyValue);
+    }
+    if (new RegExp('[\\\\/:*?\"<>|]').test(str)) {
+        return Api(false,QCommonL.isFileNameCorrectError,CodeE.Error);
+    }
+    return Api(true);
 }
