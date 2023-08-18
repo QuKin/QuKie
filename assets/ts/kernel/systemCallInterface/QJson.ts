@@ -8,10 +8,7 @@ import {getConfig} from "./_QCommon";
  * @Date            2023/8/7 9:33
  */
 
-let QJsonL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QJsonL.js").then(e => {
-    QJsonL = e.QApiL;
-})
+let {QJsonL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QJsonL.js")
 
 export default class QJson {
     data: any[];

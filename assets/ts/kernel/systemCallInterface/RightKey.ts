@@ -15,10 +15,7 @@ import {getConfig, QAL} from "./_QCommon.js";
 import {CodeE} from "../mode/codeE.js";
 import {IRightKey} from "./interface/IRightKey.js";
 
-let RightKeyL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/RightKeyL.js").then(e => {
-    RightKeyL = e.RightKeyL;
-})
+let {RightKeyL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/RightKeyL.js")
 
 export default class RightKey implements IRightKey {
     protected list: QClick[];

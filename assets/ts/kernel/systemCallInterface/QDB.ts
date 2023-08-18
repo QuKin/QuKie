@@ -13,14 +13,8 @@ import {CodeE} from "../mode/codeE.js";
 import QRange from "./QRange.js";
 import {QApi} from "./QApi.js";
 
-let QDBL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QDBL.js").then(e => {
-    QDBL = e.QDBL;
-})
-let PublicL = null;
-await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
-    PublicL = e.publicL;
-})
+let {QDBL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QDBL.js")
+let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
 
 export default class QDB implements IQDB {
     dbName: string;
@@ -126,7 +120,7 @@ export default class QDB implements IQDB {
             this.storeName = storeName;
             return QAL(window.LogIntensityE.SuccessError, QDBL.type, QDBL.setStoreNameSuccess, this.storeName)
         } else {
-            return QAL(window.LogIntensityE.Error, QDBL.type, PublicL.RangeError, b, QDBL.isErr, CodeE.RangeError)
+            return QAL(window.LogIntensityE.Error, QDBL.type, publicL.RangeError, b, QDBL.isErr, CodeE.RangeError)
         }
     }
 

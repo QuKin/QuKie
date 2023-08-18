@@ -11,14 +11,8 @@ import QRange from "../systemCallInterface/QRange.js";
 import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {QApi} from "../systemCallInterface/QApi.js";
 
-let PopUpL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/desktop/PopUpL.js").then(e => {
-    PopUpL = e.PopUpL;
-})
-let publicL = null;
-await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
-    publicL = e.publicL;
-})
+let {PopUpL} = await import("../../language/" + getConfig('Language') + "/kernel/desktop/PopUpL.js")
+let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
 
 export default class PopUp implements IPopUp {
     private qrange: QRange;

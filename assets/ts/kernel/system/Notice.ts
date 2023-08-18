@@ -13,14 +13,8 @@ import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {QApi} from "../systemCallInterface/QApi";
 import {INotice} from "./interface/INotice.js";
 
-let NoticeL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/system/NoticeL.js").then(e => {
-    NoticeL = e.NoticeL;
-})
-let PublicL = null;
-await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
-    PublicL = e.publicL;
-})
+let {NoticeL} = await import("../../language/" + getConfig('Language') + "/kernel/system/NoticeL.js")
+let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
 
 export default class Notice implements INotice {
     private range: number;
@@ -83,7 +77,7 @@ export default class Notice implements INotice {
                 return QAL(window.LogIntensityE.SuccessError, NoticeL.type, NoticeL.setRangeSuccess, this.range)
             }
         } else {
-            return QAL(window.LogIntensityE.Error, NoticeL.type, PublicL.RangeError, [], NoticeL.setRangeErrorRange + this.qrange.show(), 503)
+            return QAL(window.LogIntensityE.Error, NoticeL.type, publicL.RangeError, [], NoticeL.setRangeErrorRange + this.qrange.show(), 503)
         }
     }
 
@@ -126,11 +120,11 @@ export default class Notice implements INotice {
                             new Notification(title, options);
                             break;
                         default:
-                            return QAL(window.LogIntensityE.Error, NoticeL.type, NoticeL.seedError, [], PublicL.ParametricError, 504)
+                            return QAL(window.LogIntensityE.Error, NoticeL.type, NoticeL.seedError, [], publicL.ParametricError, 504)
                     }
                     break;
                 default:
-                    return QAL(window.LogIntensityE.Error, NoticeL.type, NoticeL.seedError, [], PublicL.ParametricError, 504)
+                    return QAL(window.LogIntensityE.Error, NoticeL.type, NoticeL.seedError, [], publicL.ParametricError, 504)
             }
             return QAL(window.LogIntensityE.SuccessError, NoticeL.type, NoticeL.seedSuccess, {title, options})
         } else {

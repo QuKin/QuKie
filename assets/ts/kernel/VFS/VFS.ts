@@ -20,10 +20,7 @@ import {QApi} from "../systemCallInterface/QApi.js";
 import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {CodeE} from "../mode/codeE.js";
 
-let VFSL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/VFS/VFSL.js").then(e => {
-    VFSL = e.VFSL;
-})
+let {VFSL} = await import("../../language/" + getConfig('Language') + "/kernel/VFS/VFSL.js");
 
 export default class VFS extends ATree implements IVFS, ICommand {
     file: QDB;
@@ -96,84 +93,10 @@ export default class VFS extends ATree implements IVFS, ICommand {
             ])
             this.file.open().then(() => {
                 this.file.setStoreName(storeName);
-                // this.test();
                 resolve(true);
             }).catch(() => {
                 reject(false);
             })
-        })
-    }
-
-    /**
-     * 测试文件
-     * @name test
-     * @private
-     */
-    private test() {
-        this.file.add({
-            id: 1,
-            pid: 0,
-            path: '/',
-            name: 'test1.txt',
-            type: 'f',
-            file: '内容测试1',
-            size: 5,
-            time: getTime().data,
-            date: getDate().data
-        }).then(r => {
-            console.log(r);
-        })
-        this.file.add({
-            id: 2,
-            pid: 0,
-            path: '/',
-            name: 'test2.txt',
-            type: 'f',
-            file: '内容测试2',
-            size: 5,
-            time: getTime().data,
-            date: getDate().data
-        }).then(r => {
-            console.log(r);
-        })
-        this.file.add({
-            id: 3,
-            pid: 0,
-            path: '/',
-            name: '.test3.txt',
-            type: 'f',
-            file: '内容测试3',
-            size: 5,
-            time: getTime().data,
-            date: getDate().data
-        }).then(r => {
-            console.log(r);
-        })
-        this.file.add({
-            id: 4,
-            pid: 0,
-            path: '/',
-            name: 'test4',
-            type: 'd',
-            file: '',
-            size: 0,
-            time: getTime().data,
-            date: getDate().data
-        }).then(r => {
-            console.log(r);
-        })
-        this.file.add({
-            id: 5,
-            pid: 4,
-            path: '/test4/',
-            name: 'test5.txt',
-            type: 'f',
-            file: '内容测试5',
-            size: 5,
-            time: getTime().data,
-            date: getDate().data
-        }).then(r => {
-            console.log(r);
         })
     }
 
@@ -553,7 +476,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
      */
     pwd(): string {
         // 判断路径最后一个字符是否是/
-        if (this.path.endsWith('/')) this.path = this.path.slice(0, -1);
+        if (this.path !== '/' && this.path.endsWith('/')) this.path = this.path.slice(0, -1);
         return this.path;
     }
 

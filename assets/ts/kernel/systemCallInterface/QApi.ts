@@ -9,14 +9,8 @@
 import {CodeE} from "../mode/codeE.js";
 import {getConfig} from "./_QCommon.js";
 
-let QApiL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QApiL.js").then(e => {
-    QApiL = e.QApiL;
-})
-let publicL = null;
-await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
-    publicL = e.publicL;
-})
+let {QApiL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QApiL.js")
+let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
 
 /**
  * Api的接口返回

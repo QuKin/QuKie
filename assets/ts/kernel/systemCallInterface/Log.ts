@@ -12,10 +12,7 @@ import {ILog} from "./interface/ILog.js";
 import {QApi, Api} from './QApi.js';
 import {getConfig} from "./_QCommon.js";
 
-let publicL = null;
-await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
-    publicL = e.publicL;
-})
+let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
 
 export default class Log implements ILog {
     protected operatingLog: any[];

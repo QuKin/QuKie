@@ -11,10 +11,7 @@ import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {QApi} from "../systemCallInterface/QApi.js";
 import {IVolume} from "./interface/IVolume.js";
 
-let VolumeL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/system/VolumeL.js").then(e => {
-    VolumeL = e.VolumeL;
-})
+let {VolumeL} = await import("../../language/" + getConfig('Language') + "/kernel/system/VolumeL.js")
 
 export default class Volume implements IVolume {
     private volume: number;

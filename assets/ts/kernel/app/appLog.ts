@@ -11,10 +11,7 @@ import {QInsert, QIsSelect, QSelect} from "../systemCallInterface/QStorage.js";
 import {Api, QApi} from "../systemCallInterface/QApi.js";
 import {getConfig} from "../systemCallInterface/_QCommon.js";
 
-let publicL = null;
-await import("../../language/" + getConfig('Language') + "/publicL.js").then(e => {
-    publicL = e.publicL;
-})
+let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
 
 export default class AppLog extends Log {
     private readonly appName: string;

@@ -12,10 +12,7 @@ import {trim} from "./QCommon.js";
 import {CodeE} from "../mode/codeE.js";
 import {IQClick} from "./interface/IQClick.js";
 
-let QClickL = null;
-await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QClickL.js").then(e => {
-    QClickL = e.QClickL;
-})
+let {QClickL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QClickL.js")
 
 export default class QClick implements IQClick {
     private name: string;

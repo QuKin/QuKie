@@ -6,7 +6,7 @@
  * @Date            2023/8/7 11:27
  */
 
-import {Api, QApi} from "./QApi.js";
+import {QApi} from "./QApi.js";
 import {typeE} from "../mode/typeE.js";
 
 let publicL = null;
