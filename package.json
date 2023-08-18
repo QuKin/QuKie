@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "qukie",
   "author": "qukie",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {
     "dev": "tsc -w"

@@ -3,6 +3,12 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/inspectionProfiles" />
+      <excludeFolder url="file://$MODULE_DIR$/assets/js/config" />
+      <excludeFolder url="file://$MODULE_DIR$/assets/js/kernel" />
+      <excludeFolder url="file://$MODULE_DIR$/assets/js/language" />
+      <excludeFolder url="file://$MODULE_DIR$/assets/js/mainInterface" />
+      <excludeFolder url="file://$MODULE_DIR$/.temp" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

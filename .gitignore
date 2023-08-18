@@ -75,4 +75,5 @@ fabric.properties
 .temp
 node_modules
 assets/js/*
+.idea
 pnpm-lock.yaml
