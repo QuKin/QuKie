@@ -35,5 +35,13 @@ export var VFSL
   VFSL['isFileSuccess'] = '\u8BE5\u6587\u4EF6/\u76EE\u5F55\u5B58\u5728'
   VFSL['lsSearchError'] = 'ls\u65B9\u6CD5\u641C\u7D22\u5931\u8D25'
   VFSL['lsSuccess'] = '\u5217\u8868\u6570\u636E\u83B7\u53D6\u6210\u529F'
+  VFSL['catSuccess'] =
+    '\u83B7\u53D6\u5F53\u524D\u6587\u4EF6\u5185\u5BB9\u6210\u529F'
+  VFSL['catError'] =
+    '\u83B7\u53D6\u5F53\u524D\u6587\u4EF6\u5185\u5BB9\u5931\u8D25'
+  VFSL['duSuccess'] =
+    '\u83B7\u53D6\u5F53\u524D\u6587\u4EF6\u5927\u5C0F\u6210\u529F'
+  VFSL['duError'] =
+    '\u83B7\u53D6\u5F53\u524D\u6587\u4EF6\u5927\u5C0F\u5931\u8D25'
 })(VFSL || (VFSL = {}))
 //# sourceMappingURL=VFSL.js.map

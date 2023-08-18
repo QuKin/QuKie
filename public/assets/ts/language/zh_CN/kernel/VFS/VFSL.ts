@@ -32,4 +32,8 @@ export enum VFSL {
   isFileSuccess = '该文件/目录存在',
   lsSearchError = 'ls方法搜索失败',
   lsSuccess = '列表数据获取成功',
+  catSuccess = '获取当前文件内容成功',
+  catError = '获取当前文件内容失败',
+  duSuccess = '获取当前文件大小成功',
+  duError = '获取当前文件大小失败',
 }

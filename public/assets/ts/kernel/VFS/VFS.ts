@@ -366,10 +366,26 @@ export default class VFS extends ATree implements IVFS, ICommand {
     return new Promise((resolve, reject) => {
       this.is(path)
         .then((e: QApi) => {
-          resolve(e.data.file)
+          resolve(
+            QAL(
+              window.LogIntensityE.SuccessError,
+              VFSL.type,
+              VFSL.catSuccess,
+              e.data.file,
+            ),
+          )
         })
         .catch((e) => {
-          reject(e)
+          reject(
+            QAL(
+              window.LogIntensityE.Error,
+              VFSL.type,
+              VFSL.catError,
+              e,
+              VFSL.catError,
+              CodeE.Error,
+            ),
+          )
         })
     })
   }
@@ -489,10 +505,66 @@ export default class VFS extends ATree implements IVFS, ICommand {
 
   /**
    * 查看当前目录以及子目录的大小
-   * @returns {object[]}
    */
   du() {
-    return []
+    return new Promise((resolve, reject) => {
+      this.file
+        .search('path', this.path)
+        .then(async (e: QApi) => {
+          let data: IFileFormat[] = e.data
+          let count: number = 0
+          let list: {
+            size: number
+            name: string
+            type: string
+            path: string
+          }[] = []
+          const DG = async (path: string) => {
+            if (!path.endsWith('/')) path += '/'
+            const res: QApi = await this.file.search('path', path)
+            const resArr: IFileFormat[] = res.data
+            for (const item of resArr) {
+              let { type, size, name, path } = item
+              list.push({
+                type,
+                size,
+                name,
+                path,
+              })
+              if (item.type === 'd') await DG(path + name)
+            }
+          }
+          for (const item of data) {
+            let { type, size, name, path } = item
+            list.push({
+              type,
+              size,
+              name,
+              path,
+            })
+            if (item.type === 'd') await DG(path + name)
+            count += item.size
+          }
+          resolve(
+            QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.duSuccess, {
+              count,
+              list,
+            }),
+          )
+        })
+        .catch((e) => {
+          return reject(
+            QAL(
+              window.LogIntensityE.Error,
+              VFSL.type,
+              VFSL.duError,
+              e,
+              VFSL.duError,
+              CodeE.Error,
+            ),
+          )
+        })
+    })
   }
 
   /**
