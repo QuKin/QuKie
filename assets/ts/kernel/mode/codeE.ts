@@ -12,7 +12,8 @@
  *      200：正常
  *
  *  4**
- *      404：空
+ *      404：没有
+ *      405：空
  *
  *  5**
  *      501：错误
@@ -24,6 +25,7 @@ export enum CodeE {
     Success = 200,
 
     NotFound = 404,
+    EmptyValue = 405,
 
     Error = 501,
     TypeError = 502,

@@ -12,6 +12,7 @@ import {IParam, IQDB, IStores} from "./interface/IQDB.js";
 import {CodeE} from "../mode/codeE.js";
 import QRange from "./QRange.js";
 import {QApi} from "./QApi.js";
+import {isEmptyValue} from "./QCommon.js";
 
 let {QDBL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QDBL.js")
 let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
@@ -115,6 +116,9 @@ export default class QDB implements IQDB {
      * @returns {QApi}
      */
     setStoreName(storeName: string): QApi {
+        if (isEmptyValue(storeName).data) {
+            return QAL(window.LogIntensityE.Error, QDBL.type, publicL.EmptyValue, storeName, publicL.EmptyValue, CodeE.EmptyValue)
+        }
         let b: boolean = this.qrange.is(storeName);
         if (b) {
             this.storeName = storeName;
@@ -219,6 +223,9 @@ export default class QDB implements IQDB {
      */
     deletes(indexName: string, indexValue: string) {
         return new Promise((resolve, reject) => {
+            if (isEmptyValue(indexName).data || isEmptyValue(indexValue).data) {
+                reject(QAL(window.LogIntensityE.Error, QDBL.type, publicL.EmptyValue, [], publicL.EmptyValue, CodeE.EmptyValue))
+            }
             const store = this.db.transaction(this.getStoreName(), "readwrite").objectStore(this.getStoreName());
             const request = store
                 .index(indexName) // 索引对象
@@ -290,6 +297,9 @@ export default class QDB implements IQDB {
      */
     getIndex(indexName: string, indexValue: string) {
         return new Promise((resolve, reject) => {
+            if (isEmptyValue(indexName).data || isEmptyValue(indexValue).data) {
+                reject(QAL(window.LogIntensityE.Error, QDBL.type, publicL.EmptyValue, [], publicL.EmptyValue, CodeE.EmptyValue))
+            }
             const store = this.db.transaction(this.getStoreName(), "readwrite").objectStore(this.getStoreName());
             const request = store.index(indexName).get(indexValue);
             request.onerror = function (e) {
@@ -334,6 +344,9 @@ export default class QDB implements IQDB {
      */
     page(indexName: string, indexValue: string, page: number, pageSize: number) {
         return new Promise((resolve, reject) => {
+            if (isEmptyValue(indexName).data || isEmptyValue(indexValue).data) {
+                reject(QAL(window.LogIntensityE.Error, QDBL.type, publicL.EmptyValue, [], publicL.EmptyValue, CodeE.EmptyValue))
+            }
             let list = [];
             let counter = 0; // 计数器
             let advanced = true; // 是否跳过多少条查询

@@ -8,9 +8,12 @@
 
 import {QApi, Api} from './QApi.js';
 import {typeE} from "../mode/typeE.js";
-import {getConfig} from "./_QCommon.js";
+import {getConfig, QAL} from "./_QCommon.js";
+import {isEmptyValue} from "./QCommon";
+import {CodeE} from "../mode/codeE";
 
 let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
+let {QStorageL} = await import("../../language/" + getConfig('Language') + "/kernel/systemCallInterface/QStorageL.js")
 
 
 /**
@@ -22,6 +25,9 @@ let {publicL} = await import("../../language/" + getConfig('Language') + "/publi
  * @returns {QApi}
  */
 export const QSelect = (key: string, Storage: Storage = localStorage, type: typeE = typeE.null): QApi => {
+    if (isEmptyValue(key).data){
+        return QAL(window.LogIntensityE.Error, QStorageL.type, publicL.EmptyValue, key,publicL.EmptyValue,CodeE.EmptyValue)
+    }
     if (QIsSelect(key, Storage)) {
         return Api([], publicL.NotFound, window.CodeE.NotFound);
     }
@@ -44,10 +50,13 @@ export const QSelect = (key: string, Storage: Storage = localStorage, type: type
  * @name QIsSelect
  * @param {string} key 键名
  * @param {Storage} [Storage=localStorage] 存储类型
- * @returns {boolean}
+ * @returns {boolean|QApi}
  * @constructor
  */
-export const QIsSelect = (key: string, Storage: Storage = localStorage): boolean => {
+export const QIsSelect = (key: string, Storage: Storage = localStorage): boolean|QApi => {
+    if (isEmptyValue(key).data){
+        return QAL(window.LogIntensityE.Error, QStorageL.type, publicL.EmptyValue, key,publicL.EmptyValue,CodeE.EmptyValue)
+    }
     return Storage.getItem(key) == null;
 }
 
@@ -77,6 +86,9 @@ export const QSelectAll = (Storage: Storage = localStorage): QApi => {
  * @returns {QApi}
  */
 export const QInsert = (key: string, value: string, Storage: Storage = localStorage): QApi => {
+    if (isEmptyValue(key).data||isEmptyValue(value).data){
+        return QAL(window.LogIntensityE.Error, QStorageL.type, publicL.EmptyValue, [],publicL.EmptyValue,CodeE.EmptyValue)
+    }
     Storage.setItem(key, value);
     return Api({key, value})
 }
@@ -89,6 +101,9 @@ export const QInsert = (key: string, value: string, Storage: Storage = localStor
  * @returns {QApi}
  */
 export const QDel = (key: string, Storage: Storage = localStorage): QApi => {
+    if (isEmptyValue(key).data){
+        return QAL(window.LogIntensityE.Error, QStorageL.type, publicL.EmptyValue, key,publicL.EmptyValue,CodeE.EmptyValue)
+    }
     let cval = QSelect(key)
     if (cval.code === 200) {
         Storage.removeItem(key)

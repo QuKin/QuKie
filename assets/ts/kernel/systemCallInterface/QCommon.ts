@@ -7,6 +7,7 @@
  */
 
 import {QApi, Api} from './QApi.js';
+import QTime from "./QTime.js";
 
 /**
  * 获取格式化时间
@@ -15,24 +16,7 @@ import {QApi, Api} from './QApi.js';
  * @returns {QApi}
  */
 export const getDateTime = (date: Date = new Date()): QApi => {
-    let year = date.getFullYear(),
-        month = date.getMonth() + 1,
-        day = date.getDate(),
-        hour = date.getHours(),
-        minute = date.getMinutes(),
-        second = date.getSeconds();
-    month = checkTime(month);
-    day = checkTime(day);
-    hour = checkTime(hour);
-    minute = checkTime(minute);
-    second = checkTime(second);
-
-    function checkTime(i) {
-        if (i < 10) i = "0" + i;
-        return i;
-    }
-
-    return Api(year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分" + second + "秒")
+    return Api(new QTime(date).format())
 }
 
 /**
@@ -42,18 +26,7 @@ export const getDateTime = (date: Date = new Date()): QApi => {
  * @returns {QApi}
  */
 export const getDate = (date: Date = new Date()): QApi => {
-    let year = date.getFullYear(),
-        month = date.getMonth() + 1,
-        day = date.getDate();
-    month = checkTime(month);
-    day = checkTime(day);
-
-    function checkTime(i) {
-        if (i < 10) i = "0" + i;
-        return i;
-    }
-
-    return Api(year + "年" + month + "月" + day + "日")
+    return Api(new QTime(date).dateFormat())
 }
 
 /**
@@ -63,19 +36,7 @@ export const getDate = (date: Date = new Date()): QApi => {
  * @returns {QApi}
  */
 export const getTime = (date: Date = new Date()): QApi => {
-    let hour = date.getHours(),
-        minute = date.getMinutes(),
-        second = date.getSeconds();
-    hour = checkTime(hour);
-    minute = checkTime(minute);
-    second = checkTime(second);
-
-    function checkTime(i) {
-        if (i < 10) i = "0" + i;
-        return i;
-    }
-
-    return Api(hour + "时" + minute + "分" + second + "秒")
+    return Api(new QTime(date).timeFormat())
 }
 
 /**
@@ -126,10 +87,10 @@ export const trim = (str: string): QApi => {
 
 /**
  * 是否为空
- * @name isNull
+ * @name isEmptyValue
  * @param {string} str 字符串
  * @returns {QApi}
  */
-export const isNull = (str: string): QApi => {
+export const isEmptyValue = (str: string): QApi => {
     return Api(trim(str).data === "");
 }

@@ -12,6 +12,8 @@ import PopUp from "../desktop/PopUp.js";
 import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {QApi} from "../systemCallInterface/QApi";
 import {INotice} from "./interface/INotice.js";
+import {isEmptyValue} from "../systemCallInterface/QCommon.js";
+import {CodeE} from "../mode/codeE.js";
 
 let {NoticeL} = await import("../../language/" + getConfig('Language') + "/kernel/system/NoticeL.js")
 let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
@@ -103,6 +105,9 @@ export default class Notice implements INotice {
      * @returns {QApi}
      */
     seed(title: string, options: { typeColor?: any, body?: string, icon?: string }, typeColor?: any): QApi {
+        if (isEmptyValue(title).data) {
+            return QAL(window.LogIntensityE.Error, NoticeL.type, publicL.EmptyValue, title, publicL.EmptyValue, CodeE.EmptyValue)
+        }
         if (this.status) {
             switch (this.range) {
                 case 1:

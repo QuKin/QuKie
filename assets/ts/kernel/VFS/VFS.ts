@@ -5,9 +5,6 @@
  * @author          QuKie <13606184008@163.com>
  * @description     虚拟文件系统
  * @Date            2023/8/14 14:04
- *
- * Promise返回QAL没写
- * cd没写回退
  */
 
 import QDB from "../systemCallInterface/QDB.js";
@@ -26,11 +23,8 @@ export default class VFS extends ATree implements IVFS, ICommand {
     file: QDB;
     path: string = '/';
 
-    // fileData: any[];
-
     constructor() {
         super();
-        // this.init();
     }
 
     /**

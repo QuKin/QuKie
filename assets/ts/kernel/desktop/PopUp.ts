@@ -10,6 +10,8 @@ import IPopUp from './interface/IPopUp'
 import QRange from "../systemCallInterface/QRange.js";
 import {getConfig, QAL} from "../systemCallInterface/_QCommon.js";
 import {QApi} from "../systemCallInterface/QApi.js";
+import {isEmptyValue} from "../systemCallInterface/QCommon.js";
+import {CodeE} from "../mode/codeE.js";
 
 let {PopUpL} = await import("../../language/" + getConfig('Language') + "/kernel/desktop/PopUpL.js")
 let {publicL} = await import("../../language/" + getConfig('Language') + "/publicL.js")
@@ -80,7 +82,7 @@ export default class PopUp implements IPopUp {
             this.range = range;
             return QAL(window.LogIntensityE.SuccessError, PopUpL.type, PopUpL.setRangeSuccess, this.range)
         } else {
-            return QAL(window.LogIntensityE.Error, PopUpL.type, publicL.RangeError, [], PopUpL.rangeErrorOnlySupported + ':' + this.qrange.show(), window.CodeE.RangeError)
+            return QAL(window.LogIntensityE.Error, PopUpL.type, publicL.RangeError, [], PopUpL.rangeErrorOnlySupported + ':' + this.qrange.show(), CodeE.RangeError)
         }
     }
 
@@ -174,7 +176,7 @@ export default class PopUp implements IPopUp {
                             this.css = typeColor;
                             break;
                         default:
-                            return QAL(window.LogIntensityE.Error, PopUpL.type, PopUpL.setTypeColorError, [], 'border参数错误，border参数只能一个颜色，或者三个整体参数：1px solid red', 504)
+                            return QAL(window.LogIntensityE.Error, PopUpL.type, PopUpL.setTypeColorError, [], 'border参数错误，border参数只能一个颜色，或者三个整体参数：1px solid red', CodeE.ParametricError)
                     }
                 } else {
                     this.css = {
@@ -202,6 +204,9 @@ export default class PopUp implements IPopUp {
      * @returns {QApi}
      */
     setTitle(title: string): QApi {
+        if (isEmptyValue(title).data) {
+            return QAL(window.LogIntensityE.Error, PopUpL.type, publicL.EmptyValue, title, publicL.EmptyValue, CodeE.EmptyValue)
+        }
         this.title = title;
         return QAL(window.LogIntensityE.SuccessError, PopUpL.type, PopUpL.setTitleSuccess, this.title)
     }

@@ -8,14 +8,15 @@
  */
 import {Language} from "../language/language.js";
 
-export const Config={
-    Language:Language.zh_CN,
+export const Config = {
+    Language: Language.zh_CN,
     logLength: 300,
-    logDissociation:2,
-    appLogLength:50,
-    appLogDissociation:1,
+    logDissociation: 2,
+    appLogLength: 50,
+    appLogDissociation: 1,
+    timeFormat: 'yyyy年MM月dd日 HH时mm分ss秒',
 }
 
-if (localStorage.getItem('Config')==null) {
+if (localStorage.getItem('Config') == null) {
     localStorage.setItem('Config', JSON.stringify(Config))
 }
