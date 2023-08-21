@@ -16,6 +16,7 @@ import {
 } from '../systemCallInterface/QCommon.js'
 import { getConfig, QAL } from '../systemCallInterface/_QCommon.js'
 import { CodeE } from '../mode/codeE.js'
+import { EFileType } from './enum/EFileType.js'
 let { VFSL } = await import(
   '../../language/' + getConfig('Language') + '/kernel/VFS/VFSL.js'
 )
@@ -415,7 +416,7 @@ export default class VFS extends ATree {
               ),
             )
           }
-          if (e.data.type === 'd') {
+          if (e.data.type === EFileType.directory) {
             this.path = e.data.path + e.data.name
             if (!this.path.endsWith('/')) this.path += '/'
             return resolve(
@@ -486,7 +487,7 @@ export default class VFS extends ATree {
                 name,
                 path,
               })
-              if (item.type === 'd') await DG(path + name)
+              if (item.type === EFileType.directory) await DG(path + name)
             }
           }
           for (const item of data) {
@@ -497,7 +498,7 @@ export default class VFS extends ATree {
               name,
               path,
             })
-            if (item.type === 'd') await DG(path + name)
+            if (item.type === EFileType.directory) await DG(path + name)
             count += item.size
           }
           resolve(
@@ -566,7 +567,7 @@ export default class VFS extends ATree {
               if (type.indexOf('i') !== -1) temp.id = item.id
               if (type.indexOf('l') !== -1) {
                 // 判断是否是目录
-                if (item.type === 'd') {
+                if (item.type === EFileType.directory) {
                   const res = await this.file
                     .search('pid', item.id)
                     .catch((e) => {
@@ -678,7 +679,7 @@ export default class VFS extends ATree {
       }
       this.is(name)
         .then((e) => {
-          if (e.type === 'd') {
+          if (e.type === EFileType.directory) {
             if (e.quantities === 0) {
               this.file
                 .delete(e.id)

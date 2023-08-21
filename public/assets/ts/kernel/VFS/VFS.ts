@@ -21,6 +21,7 @@ import {
 import { QApi } from '../systemCallInterface/QApi.js'
 import { getConfig, QAL } from '../systemCallInterface/_QCommon.js'
 import { CodeE } from '../mode/codeE.js'
+import { EFileType } from './enum/EFileType.js'
 
 let { VFSL } = await import(
   '../../language/' + getConfig('Language') + '/kernel/VFS/VFSL.js'
@@ -434,7 +435,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
               ),
             )
           }
-          if (e.data.type === 'd') {
+          if (e.data.type === EFileType.directory) {
             this.path = e.data.path + e.data.name
             if (!this.path.endsWith('/')) this.path += '/'
             return resolve(
@@ -531,7 +532,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
                 name,
                 path,
               })
-              if (item.type === 'd') await DG(path + name)
+              if (item.type === EFileType.directory) await DG(path + name)
             }
           }
           for (const item of data) {
@@ -542,7 +543,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
               name,
               path,
             })
-            if (item.type === 'd') await DG(path + name)
+            if (item.type === EFileType.directory) await DG(path + name)
             count += item.size
           }
           resolve(
@@ -609,7 +610,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
    * 根据类型，输出当前目录的列表<br>
    * a:可看见以"."开头的隐藏文件<br>
    * i:显示文件id<br>
-   * l:{文件个数,文件大小,创建日期,文件名}
+   * l:{文件个数,文件大小,创建日期,文件名,文件名}
    * @param {string} type 类型 a|l|i
    * @returns {object[]}
    */
@@ -642,7 +643,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
               if (type.indexOf('i') !== -1) temp.id = item.id
               if (type.indexOf('l') !== -1) {
                 // 判断是否是目录
-                if (item.type === 'd') {
+                if (item.type === EFileType.directory) {
                   const res: QApi = await this.file
                     .search('pid', item.id)
                     .catch((e) => {
@@ -792,7 +793,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
       }
       this.is(name)
         .then((e: IFileFormat) => {
-          if (e.type === 'd') {
+          if (e.type === EFileType.directory) {
             if (e.quantities === 0) {
               this.file
                 .delete(e.id)
