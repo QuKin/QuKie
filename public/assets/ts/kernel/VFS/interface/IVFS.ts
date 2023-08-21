@@ -13,6 +13,12 @@ export interface IVFS {
   path: string
 
   /**
+   * 初始化
+   * @param {string} [storeName=home] 仓库名
+   */
+  init(storeName: string)
+
+  /**
    * 判断type是否存在
    * @param {string} type 类型
    * @param {string[]} arr 类型数组
@@ -31,4 +37,16 @@ export interface IVFS {
    * @param {string} file 目录或文件名称
    */
   isFile(file: string)
+
+  /**
+   * 根据this.path获取id
+   */
+  getId()
+
+  /**
+   * 添加判断路径最后一个字符是否是/，否就添加
+   * @param {string} str 字符
+   * @returns {string}
+   */
+  addSlash(str: string): string
 }

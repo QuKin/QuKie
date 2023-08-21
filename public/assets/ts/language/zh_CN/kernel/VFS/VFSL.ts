@@ -9,7 +9,8 @@
  */
 export enum VFSL {
   type = '虚拟文件系统',
-  lsTypeError = 'ls命令类型错误',
+  lsTypeError = 'ls命令-类型错误',
+  cpTypeError = 'cp命令-类型错误',
   cdError = '这个地址/文件不是目录',
   cdIsError = '没有这个目录',
   cdSuccess = '进入该目录成功',
@@ -36,4 +37,6 @@ export enum VFSL {
   catError = '获取当前文件内容失败',
   duSuccess = '获取当前文件大小成功',
   duError = '获取当前文件大小失败',
+  cpSourceNotFound = 'cp命令-源文件不存在',
+  cpTargetError = 'cp命令-目标文件存在，请使用f参数进行强制操作',
 }

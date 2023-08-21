@@ -22,6 +22,8 @@ import { QApi } from '../systemCallInterface/QApi.js'
 import { getConfig, QAL } from '../systemCallInterface/_QCommon.js'
 import { CodeE } from '../mode/codeE.js'
 import { EFileType } from './enum/EFileType.js'
+import { ELs } from './enum/ELs.js'
+import { ECp } from './enum/ECp.js'
 
 let { VFSL } = await import(
   '../../language/' + getConfig('Language') + '/kernel/VFS/VFSL.js'
@@ -225,11 +227,11 @@ export default class VFS extends ATree implements IVFS, ICommand {
         if (this.path === '/') {
           pathTemp = this.path + path
         } else {
-          pathTemp = this.path + '/' + path
+          this.path = this.addSlash(this.path)
+          pathTemp = this.path + path
         }
       }
-      // 判断路径最后一个字符是否是/
-      if (!path.endsWith('/')) path += '/'
+      path = this.addSlash(path)
       // 当前目录
       if (path.indexOf('./') === 0) {
         // 去掉"./"，进行拼接原路径
@@ -278,8 +280,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
           )
         }
       }
-      // // 判断字符串最后一个字符是否存在
-      if (!pathTemp.endsWith('/')) pathTemp += '/'
+      pathTemp = this.addSlash(pathTemp)
       // 当最后一个本身是一个目录
       let arr: string[] = pathTemp.split('/')
       // 最后一个目录名称
@@ -339,6 +340,16 @@ export default class VFS extends ATree implements IVFS, ICommand {
           )
         })
     })
+  }
+
+  /**
+   * 添加判断路径最后一个字符是否是/，否就添加
+   * @param {string} str 字符
+   * @returns {string}
+   */
+  addSlash(str: string): string {
+    if (!str.endsWith('/')) str += '/'
+    return str
   }
 
   /**
@@ -437,7 +448,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
           }
           if (e.data.type === EFileType.directory) {
             this.path = e.data.path + e.data.name
-            if (!this.path.endsWith('/')) this.path += '/'
+            this.path = this.addSlash(this.path)
             return resolve(
               QAL(
                 window.LogIntensityE.SuccessError,
@@ -486,22 +497,126 @@ export default class VFS extends ATree implements IVFS, ICommand {
    * 复制目录或文件
    * @param {string} source 源文件
    * @param {string} target 目标文件
-   * @returns {boolean}
    */
-  cp(source: string, target: string): boolean
+  cp(source: string, target: string)
   /**
    * 根据类型，复制目录或文件
    * f:强制覆盖文件或目录<br>
    * r:将目录下所有文件与子目录一并处理<br>
-   * l:建立硬连接<br>
+   * l:建立连接<br>
    * @param {string} source 源文件
    * @param {string} target 目标文件
-   * @param {string} type 类型 f|r|l
-   * @returns {boolean}
+   * @param {ECp|string} type 类型 f|r|l
    */
-  cp(source: string, target: string, type: string): boolean
-  cp(source: string, target: string, type?: string): boolean {
-    return false
+  cp(source: string, target: string, type: ECp | string)
+  cp(source: string, target: string, type?: ECp | string) {
+    return new Promise(async (resolve, reject) => {
+      if (isEmptyValue(source).data || isEmptyValue(target).data) {
+        return reject(
+          QAL(
+            window.LogIntensityE.Error,
+            VFSL.type,
+            publicL.EmptyValue,
+            [],
+            publicL.EmptyValue,
+            CodeE.EmptyValue,
+          ),
+        )
+      }
+      if (
+        arguments.length === 3 &&
+        !this.isType(type, [ECp.forced, ECp.recursive, ECp.link])
+      ) {
+        return reject(
+          QAL(
+            window.LogIntensityE.Error,
+            VFSL.type,
+            VFSL.cpTypeError,
+            type,
+            VFSL.cpTypeError,
+            CodeE.TypeError,
+          ),
+        )
+      }
+      // 判断源文件是否存在
+      const sourceFile = await this.is(source).catch((e) => {
+        return reject(
+          QAL(
+            window.LogIntensityE.Error,
+            VFSL.type,
+            VFSL.cpSourceNotFound,
+            [source, e],
+            VFSL.cpSourceNotFound,
+            CodeE.NotFound,
+          ),
+        )
+      })
+      if (sourceFile === undefined) return
+      // console.log(sourceFile);
+      if (arguments.length === 3) {
+        // 强制覆盖文件或目录
+        if (type.indexOf(ECp.forced) !== -1) {
+          // 判断目标文件是否存在，不存在报错
+          await this.is(target).catch((e) => {
+            return reject(
+              QAL(
+                window.LogIntensityE.Error,
+                VFSL.type,
+                VFSL.cpTargetError,
+                [target, e],
+                VFSL.cpTargetError,
+                CodeE.NotFound,
+              ),
+            )
+          })
+        } else {
+          // 判断目标文件是否存在，存在报错
+          await this.is(target).then((e) => {
+            return reject(
+              QAL(
+                window.LogIntensityE.Error,
+                VFSL.type,
+                VFSL.cpTargetError,
+                [target, e],
+                VFSL.cpTargetError,
+                CodeE.NotFound,
+              ),
+            )
+          })
+        }
+        // 将目录下所有文件与子目录一并处理
+        if (type.indexOf(ECp.recursive) !== -1) {
+        }
+      } else {
+        // 判断目标文件是否存在，存在报错
+        await this.is(target).then((e) => {
+          return reject(
+            QAL(
+              window.LogIntensityE.Error,
+              VFSL.type,
+              VFSL.cpTargetError,
+              [target, e],
+              VFSL.cpTargetError,
+              CodeE.NotFound,
+            ),
+          )
+        })
+      }
+    })
+  }
+
+  /**
+   * 查找所有子节点
+   * @param {number} id 当前节点id
+   * @param {any[]} [arr=[]] 不填，递归使用
+   */
+  searchAllChildren(id: number, arr: any[] = []) {
+    this.file
+      .search('pid', id)
+      .then((e) => {
+        console.log(e)
+      })
+      .catch((e) => {})
   }
 
   /**
@@ -521,7 +636,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
             path: string
           }[] = []
           const DG = async (path: string) => {
-            if (!path.endsWith('/')) path += '/'
+            path = this.addSlash(path)
             const res: QApi = await this.file.search('path', path)
             const resArr: IFileFormat[] = res.data
             for (const item of resArr) {
@@ -591,7 +706,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
    */
   ll() {
     return new Promise((resolve, reject) => {
-      this.ls('l')
+      this.ls(ELs.list)
         .then((e) => {
           resolve(e)
         })
@@ -611,13 +726,16 @@ export default class VFS extends ATree implements IVFS, ICommand {
    * a:可看见以"."开头的隐藏文件<br>
    * i:显示文件id<br>
    * l:{文件个数,文件大小,创建日期,文件名,文件名}
-   * @param {string} type 类型 a|l|i
+   * @param {ELs|string} type 类型 a|l|i
    * @returns {object[]}
    */
-  ls(type: string)
-  ls(type?: string) {
+  ls(type: ELs | string)
+  ls(type?: ELs | string) {
     return new Promise((resolve, reject) => {
-      if (arguments.length !== 0 && !this.isType(type, ['a', 'l', 'i'])) {
+      if (
+        arguments.length !== 0 &&
+        !this.isType(type, [ELs.alpho, ELs.list, ELs.id])
+      ) {
         return reject(
           QAL(
             window.LogIntensityE.Error,
@@ -629,7 +747,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
           ),
         )
       }
-      if (!this.path.endsWith('/')) this.path += '/'
+      this.path = this.addSlash(this.path)
       this.file
         .search('path', this.path)
         .then(async (e: QApi) => {
@@ -638,10 +756,14 @@ export default class VFS extends ATree implements IVFS, ICommand {
             let temp: IFileFormat = {}
 
             if (arguments.length !== 0) {
-              if (type.indexOf('a') === -1 && item.name.indexOf('.') === 0)
+              if (
+                type.indexOf(ELs.alpho) === -1 &&
+                item.name.indexOf('.') === 0
+              ) {
                 continue
-              if (type.indexOf('i') !== -1) temp.id = item.id
-              if (type.indexOf('l') !== -1) {
+              }
+              if (type.indexOf(ELs.id) !== -1) temp.id = item.id
+              if (type.indexOf(ELs.list) !== -1) {
                 // 判断是否是目录
                 if (item.type === EFileType.directory) {
                   const res: QApi = await this.file
@@ -748,8 +870,9 @@ export default class VFS extends ATree implements IVFS, ICommand {
    */
   pwd(): string {
     // 判断路径最后一个字符是否是/
-    if (this.path !== '/' && this.path.endsWith('/'))
+    if (this.path !== '/' && this.path.endsWith('/')) {
       this.path = this.path.slice(0, -1)
+    }
     return this.path
   }
 
@@ -882,6 +1005,33 @@ export default class VFS extends ATree implements IVFS, ICommand {
   }
 
   /**
+   * 根据this.path获取id
+   */
+  getId(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      if (this.path === '/') reject(null)
+      let path: string = this.path
+      let pathArr: string[] = path.split('/')
+      // 去掉最后面的''
+      if (pathArr[pathArr.length - 1] === '') pathArr.pop()
+      // 去掉最后一个字段
+      let name: string = pathArr.pop()
+      path = pathArr.join('/')
+      path = path === '' ? '/' : path
+      this.file
+        .search('path', path)
+        .then((e: QApi) => {
+          for (const item of e.data) {
+            if (item.name === name) return resolve(item.id)
+          }
+        })
+        .catch(() => {
+          return reject(-1)
+        })
+    })
+  }
+
+  /**
    * 私有创建文件或目录
    * @param {string} name 名称
    * @param {string} type 类型
@@ -911,47 +1061,28 @@ export default class VFS extends ATree implements IVFS, ICommand {
           ),
         )
       }
-      const add = () => {
+      const add = async () => {
+        this.path = this.addSlash(this.path)
         this.file
-          .getIndex('path', this.path)
-          .then((e: QApi) => {
-            let pid: number = 0
-            if (this.path !== '/') pid = e.data.id
-            // 判断路径最后一个字符是否是/
-            if (!this.path.endsWith('/')) this.path += '/'
-            this.file
-              .add({
-                pid: pid,
-                path: this.path,
-                name: name,
-                type: type,
-                file: '',
-                size: 0,
-                time: getTime().data,
-                date: getDate().data,
-              })
-              .then((e) => {
-                return resolve(
-                  QAL(
-                    window.LogIntensityE.SuccessError,
-                    VFSL.type,
-                    successMessage,
-                    e,
-                  ),
-                )
-              })
-              .catch((e) => {
-                return reject(
-                  QAL(
-                    window.LogIntensityE.Error,
-                    VFSL.type,
-                    errorMessage1,
-                    e,
-                    errorMessage1,
-                    CodeE.Error,
-                  ),
-                )
-              })
+          .add({
+            pid: await this.getId(),
+            path: this.path,
+            name: name,
+            type: type,
+            file: '',
+            size: 0,
+            time: getTime().data,
+            date: getDate().data,
+          })
+          .then((e) => {
+            return resolve(
+              QAL(
+                window.LogIntensityE.SuccessError,
+                VFSL.type,
+                successMessage,
+                e,
+              ),
+            )
           })
           .catch((e) => {
             return reject(
@@ -969,7 +1100,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
       this.is(name)
         .then((e: QApi) => {
           if (e.data.type !== type && e.data.name !== name) {
-            add()
+            return add()
           } else {
             return reject(
               QAL(
@@ -985,7 +1116,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
         })
         .catch(() => {
           // 没有就创建
-          add()
+          return add()
         })
     })
   }

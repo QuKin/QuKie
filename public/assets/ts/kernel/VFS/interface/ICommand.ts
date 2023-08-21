@@ -6,6 +6,10 @@
  * @description     VFS命令接口
  * @Date            2023/8/15 14:39
  */
+
+import { ELs } from '../enum/ELs.js'
+import { ECp } from '../enum/ECp.js'
+
 export interface ICommand {
   /**
    * 判断当前是否存在该目录/文件
@@ -24,10 +28,10 @@ export interface ICommand {
    * a:可看见以"."开头的隐藏文件<br>
    * i:显示文件id<br>
    * l:{文件个数,文件大小,创建日期,文件名}
-   * @param {string} type 类型 a|l|i
+   * @param {ELs|string} type 类型 a|l|i
    * @returns {object[]}
    */
-  ls(type: string)
+  ls(type: ELs | string)
 
   /**
    * 是ls('l')的快速方式
@@ -59,19 +63,18 @@ export interface ICommand {
    * @param {string} target 目标文件
    * @returns {boolean}
    */
-  cp(source: string, target: string): boolean
+  cp(source: string, target: string)
 
   /**
    * 根据类型，复制目录或文件
    * f:强制覆盖文件或目录<br>
    * r:将目录下所有文件与子目录一并处理<br>
-   * l:建立硬连接<br>
+   * l:建立连接<br>
    * @param {string} source 源文件
    * @param {string} target 目标文件
-   * @param {string} type 类型 f|r|l
-   * @returns {boolean}
+   * @param {ECp|string} type 类型 f|r|l
    */
-  cp(source: string, target: string, type: string): boolean
+  cp(source: string, target: string, type: ECp | string)
 
   /**
    * 删除文件
