@@ -49,4 +49,10 @@ export interface IVFS {
    * @returns {string}
    */
   addSlash(str: string): string
+
+  /**
+   * 查找所有子节点
+   * @param {number} id 当前节点id
+   */
+  searchAllChildren(id: number)
 }

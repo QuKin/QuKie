@@ -608,15 +608,25 @@ export default class VFS extends ATree implements IVFS, ICommand {
   /**
    * 查找所有子节点
    * @param {number} id 当前节点id
-   * @param {any[]} [arr=[]] 不填，递归使用
    */
-  searchAllChildren(id: number, arr: any[] = []) {
-    this.file
-      .search('pid', id)
-      .then((e) => {
-        console.log(e)
-      })
-      .catch((e) => {})
+  async searchAllChildren(id: number) {
+    let arr: IFileFormat[] = []
+    // 使用一个队列来存储待搜索的id
+    let queue: number[] = [id]
+    // 当队列不为空时，循环搜索
+    while (queue.length > 0) {
+      // 取出队列头部的id
+      let curId = queue.shift()
+      // 使用await等待异步操作的结果
+      let e: QApi = await this.file.search('pid', curId)
+      // 遍历e.data，将其加入到arr和queue中
+      for (const item of e.data) {
+        arr.push(item)
+        queue.push(item.id)
+      }
+    }
+    // 返回arr
+    return arr
   }
 
   /**
@@ -635,21 +645,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
             type: string
             path: string
           }[] = []
-          const DG = async (path: string) => {
-            path = this.addSlash(path)
-            const res: QApi = await this.file.search('path', path)
-            const resArr: IFileFormat[] = res.data
-            for (const item of resArr) {
-              let { type, size, name, path } = item
-              list.push({
-                type,
-                size,
-                name,
-                path,
-              })
-              if (item.type === EFileType.directory) await DG(path + name)
-            }
-          }
+
           for (const item of data) {
             let { type, size, name, path } = item
             list.push({
@@ -658,8 +654,12 @@ export default class VFS extends ATree implements IVFS, ICommand {
               name,
               path,
             })
-            if (item.type === EFileType.directory) await DG(path + name)
             count += item.size
+            ;(await this.searchAllChildren(item.id)).forEach((item) => {
+              let { type, size, name, path } = item
+              list.push({ type, size, name, path })
+              count += item.size
+            })
           }
           resolve(
             QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.duSuccess, {
@@ -1007,23 +1007,26 @@ export default class VFS extends ATree implements IVFS, ICommand {
   /**
    * 根据this.path获取id
    */
-  getId(): Promise<number> {
+  getId() {
     return new Promise((resolve, reject) => {
-      if (this.path === '/') reject(null)
+      if (this.path === '/') return reject(-1)
       let path: string = this.path
-      let pathArr: string[] = path.split('/')
+
       // 去掉最后面的''
-      if (pathArr[pathArr.length - 1] === '') pathArr.pop()
+      let pathArr = path.split('/').filter((item) => item !== '')
       // 去掉最后一个字段
-      let name: string = pathArr.pop()
-      path = pathArr.join('/')
-      path = path === '' ? '/' : path
+      let name = pathArr.at(-1)
+      // 去掉最后一个字段后的路径
+      pathArr[pathArr.length - 1] = ''
+      path = '/' + pathArr.join('/')
+
       this.file
         .search('path', path)
         .then((e: QApi) => {
           for (const item of e.data) {
             if (item.name === name) return resolve(item.id)
           }
+          return reject(-1)
         })
         .catch(() => {
           return reject(-1)
