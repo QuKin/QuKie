@@ -43,6 +43,14 @@ export default class QTime implements IQTime {
   }
 
   /**
+   * 获取时间戳
+   * @returns {number}
+   */
+  getTime(): number {
+    return this.date.getTime()
+  }
+
+  /**
    * 获取年份
    * @returns {number}
    */

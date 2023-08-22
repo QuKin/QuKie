@@ -77,3 +77,4 @@ node_modules
 public/assets/js/*
 .idea
 pnpm-lock.yaml
+.vscode

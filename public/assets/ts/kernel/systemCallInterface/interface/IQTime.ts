@@ -29,6 +29,12 @@ export interface IQTime {
   init(date: Date): void
 
   /**
+   * 获取时间戳
+   * @returns {number}
+   */
+  getTime(): number
+
+  /**
    * 获取年份
    * @returns {number}
    */

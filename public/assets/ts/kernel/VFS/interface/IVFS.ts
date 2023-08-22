@@ -55,4 +55,10 @@ export interface IVFS {
    * @param {number} id 当前节点id
    */
   searchAllChildren(id: number)
+
+  /**
+   * 获取路径上的最后一个字符和去除后的路径
+   * @returns {{name:string,path:string}}
+   */
+  getNamePath(): { name: string; path: string }
 }

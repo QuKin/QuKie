@@ -51,6 +51,16 @@ export const getTime = (date: Date = new Date()): QApi => {
 }
 
 /**
+ * 获取时间戳
+ * @name getTimestamp
+ * @param {Date} [date=new Date()] 时间
+ * @returns {QApi}
+ */
+export const getTimestamp = (date: Date = new Date()): QApi => {
+  return Api(new QTime(date).getTime())
+}
+
+/**
  * 判断邮箱是否正确
  * @name isEmail
  * @param {string} email 邮件
