@@ -552,10 +552,10 @@ export default class VFS extends ATree implements IVFS, ICommand {
       })
       if (sourceFile === undefined) return
 
-      // 如目标路径有子目录，就删除子目录里的所有
-      for (const itemSAC of await this.searchAllChildren(sourceFile.data.id)) {
-        await this.file.delete(itemSAC.id)
-      }
+      // // 如目标路径有子目录，就删除子目录里的所有
+      // for (const itemSAC of await this.searchAllChildren(sourceFile.data.id)) {
+      //   await this.file.delete(itemSAC.id)
+      // }
       if (arguments.length !== 3 || type.indexOf(ECp.forced) === -1) {
         // 判断目标文件是否存在，存在报错
         await this.is(target)
@@ -1033,7 +1033,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
    */
   getId() {
     return new Promise((resolve, reject) => {
-      if (this.path === '/') return reject(-1)
+      if (this.path === '/') return resolve(0)
       let { name, path } = this.getNamePath()
 
       this.file
