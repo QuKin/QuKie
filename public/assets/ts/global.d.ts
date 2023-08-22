@@ -18,4 +18,5 @@ declare interface Window {
   mozIndexedDB?: any
   msIndexedDB?: any
   webkitIndexedDB?: any
+  devTest?: any
 }

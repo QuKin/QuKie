@@ -77,7 +77,7 @@ export default class devTest {
       })
       await vfs.file.add({
         id: 6,
-        pid: 0,
+        pid: 4,
         path: '/test4/',
         name: 'test6',
         type: 'd',
@@ -99,7 +99,7 @@ export default class devTest {
       })
       await vfs.file.add({
         id: 8,
-        pid: 0,
+        pid: 7,
         path: '/test7/',
         name: 'test8',
         type: 'd',
@@ -110,7 +110,7 @@ export default class devTest {
       })
       await vfs.file.add({
         id: 9,
-        pid: 0,
+        pid: 8,
         path: '/test7/test8/',
         name: 'test9',
         type: 'd',
@@ -121,7 +121,7 @@ export default class devTest {
       })
       await vfs.file.add({
         id: 10,
-        pid: 0,
+        pid: 8,
         path: '/test7/test8/',
         name: 'test10.txt',
         type: 'f',
@@ -132,7 +132,7 @@ export default class devTest {
       })
       await vfs.file.add({
         id: 11,
-        pid: 0,
+        pid: 7,
         path: '/test7/',
         name: 'test10',
         type: 'd',
@@ -143,7 +143,7 @@ export default class devTest {
       })
       await vfs.file.add({
         id: 12,
-        pid: 0,
+        pid: 4,
         path: '/test4/',
         name: 'test10',
         type: 'd',

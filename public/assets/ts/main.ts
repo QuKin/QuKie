@@ -66,7 +66,7 @@ class QuKie implements ISysVal, IAppVal, ISysFun {
   md5: any
 }
 
-new devTest() // 测试开发环境配置
+window.devTest = new devTest() // 测试开发环境配置
 window.QLog = new Log()
 window.QApi = Api
 window.CodeE = CodeE

@@ -552,13 +552,9 @@ export default class VFS extends ATree implements IVFS, ICommand {
       })
       if (sourceFile === undefined) return
 
-      // // 如目标路径有子目录，就删除子目录里的所有
-      // for (const itemSAC of await this.searchAllChildren(sourceFile.data.id)) {
-      //   await this.file.delete(itemSAC.id)
-      // }
-      if (arguments.length !== 3 || type.indexOf(ECp.forced) === -1) {
+      if (arguments.length !== 3 && !!type && type.indexOf(ECp.forced) === -1) {
         // 判断目标文件是否存在，存在报错
-        await this.is(target)
+        return await this.is(target)
           .then((e) => {
             return reject(
               QAL(
@@ -604,6 +600,77 @@ export default class VFS extends ATree implements IVFS, ICommand {
         }
         // 将目录下所有文件与子目录一并处理
         if (type.indexOf(ECp.recursive) !== -1) {
+          // const addR=(data:any[],arr:any[]=[])=>{
+          //   data.forEach(item=>{
+          //     console.log(item);
+          //     await this.file.add({
+          //       pid: sourceFile.data.pid,
+          //       path: path,
+          //       name: name,
+          //       type: sourceFile.data.type,
+          //       file: sourceFile.data.file,
+          //       size: sourceFile.data.size,
+          //       created_at: sourceFile.data.created_at,
+          //       update_at: getTimestamp(),
+          //     })
+          //     item.children?.length && addR(item.children,arr);
+          //   })
+          //   return arr;
+          // }
+          let sourceTree = this.toTree(
+            await this.searchAllChildren(sourceFile.data.id),
+          )
+          this.is(target)
+            .then(async (e: QApi) => {
+              let targetTree = this.toTree(
+                await this.searchAllChildren(e.data.id),
+              )
+              console.log(sourceTree)
+              console.log(targetTree)
+            })
+            .catch(() => {
+              // let sourceData=await this.searchAllChildren(sourceFile.data.id);
+              // console.log(sourceTree);
+              // addR(sourceTree);
+            })
+          // const targetFile: QApi =await this.is(target).catch(() => {});
+          // if (targetFile === undefined) return
+          // let targetTree=this.toTree(await this.searchAllChildren(targetFile.data.id));
+
+          // for (const itemSAC of await this.searchAllChildren(sourceFile.data.id)) {
+          //   // await this.file.delete(itemSAC.id)
+          //   const targetFile: QApi =await this.is(target).catch(() => {});
+          //   for (const itemSACT of await this.searchAllChildren(targetFile.data.id)) {
+          //
+          //   }
+          //
+          //   await this.is(target)
+          //     .then(async (e: QApi) => {
+          //       for (const itemSACT of await this.searchAllChildren(e.data.id)) {
+          //         if (itemSAC.name===itemSACT.name){
+          //           if (type.indexOf(ECp.forced) !== -1){
+          //
+          //           }else{
+          //             return reject(
+          //               QAL(
+          //                 window.LogIntensityE.Error,
+          //                 VFSL.type,
+          //                 VFSL.cpTargetError,
+          //                 [target, e],
+          //                 VFSL.cpTargetError,
+          //                 CodeE.NotFound,
+          //               ),
+          //             )
+          //           }
+          //         }
+          //         // 强制覆盖文件或目录
+          //         if (itemSAC.name===itemSACT.name && type.indexOf(ECp.forced) !== -1){
+          //           await this.file.delete(itemSACT.id)
+          //         }
+          //       }
+          //     })
+          //     .catch(() => {})
+          // }
         }
         // 建立连接
         if (type.indexOf(ECp.link) !== -1) {
