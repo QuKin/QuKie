@@ -492,12 +492,114 @@ export default class VFS extends ATree implements IVFS, ICommand {
     return false
   }
 
+  /**
+   * 判断是否有该路径
+   * @param {string} path 路径
+   * @returns {Promise<boolean>}
+   */
   async isPathTF(path: string): Promise<boolean> {
     let temp: boolean = true
     await this.is(path).catch(() => {
       temp = false
     })
     return temp
+  }
+
+  /**
+   * 创建多层节点
+   * @param {IFileFormat[]} node 节点
+   * @param {string} paths 路径
+   * @param {string} source 源文件
+   * 有bug，创建时无法正确pid
+   */
+  createNestedNodes(
+    node: IFileFormat[],
+    paths: string,
+    source: string,
+  ): Promise<QApi> {
+    return new Promise(async (resolve, reject) => {
+      let { path, name } = this.getNamePath(paths)
+
+      // 当不存在时创建目录
+      await this.is(paths).catch(async () => {
+        // 创建目录
+        await this.add(
+          name,
+          'd',
+          VFSL.mkdirSuccess,
+          VFSL.mkdirError,
+          VFSL.mkdirRemainError,
+          path,
+        )
+      })
+
+      function addLevelField(tree: IFileFormat[], level: number = 0) {
+        for (let i = 0; i < tree.length; i++) {
+          const node: IFileFormat = tree[i]
+          node.level = level
+
+          if (node.children && node.children.length > 0) {
+            addLevelField(node.children, level + 1)
+          }
+        }
+      }
+      // 添加层级
+      addLevelField(node)
+      // 转换为扁平化
+      let nodeArr: IFileFormat[] = this.toFlat(node)
+      // 排序，level最小的在最上面
+      nodeArr.sort(function (a, b) {
+        // if (a.level === b.level) return a.id - b.id;
+        return a.level - b.level
+      })
+      // debugger;
+      // // 获取层级结构最大值
+      // let levelMax:number=nodeArr[nodeArr.length-1].level;
+      let levelNum: number = -1
+      let id: number = await this.getId(paths)
+      if (id === -1) {
+        return reject(
+          QAL(
+            window.LogIntensityE.Error,
+            VFSL.type,
+            VFSL.createNestedNodesError,
+            id,
+            VFSL.createNestedNodesError,
+            CodeE.Error,
+          ),
+        )
+      }
+      let pid: number = 0
+      paths = this.addSlash(paths)
+      for (const item of nodeArr) {
+        if (levelNum !== item.level) {
+          levelNum = item.level
+          pid = id
+        }
+
+        let sourcePath: string = item.path.split(this.addSlash(source))[1]
+        let pathTemp: string = paths + sourcePath
+        id = (
+          await this.file.add({
+            pid: pid,
+            path: pathTemp,
+            name: item.name,
+            type: item.type,
+            file: item.file,
+            size: item.size,
+            created_at: item.created_at,
+            update_at: getTimestamp().data,
+          })
+        ).data.id
+      }
+      return resolve(
+        QAL(
+          window.LogIntensityE.SuccessError,
+          VFSL.type,
+          VFSL.createNestedNodesSuccess,
+        ),
+      )
+    })
   }
 
   /**
@@ -579,7 +681,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
               created_at: getTimestamp().data,
               update_at: getTimestamp().data,
             })
-            return reject(
+            return resolve(
               QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cpSuccess),
             )
           })
@@ -623,7 +725,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
               created_at: sourceFile.data.created_at,
               update_at: getTimestamp().data,
             })
-            return reject(
+            return resolve(
               QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cpSuccess),
             )
           })
@@ -709,26 +811,11 @@ export default class VFS extends ATree implements IVFS, ICommand {
           }
           // 将目录下所有文件与子目录一并处理
           if (type.indexOf(ECp.recursive) !== -1) {
-            // const addR=(data:any[],arr:any[]=[])=>{
-            //   data.forEach(item=>{
-            //     console.log(item);
-            //     await this.file.add({
-            //       pid: sourceFile.data.pid,
-            //       path: path,
-            //       name: name,
-            //       type: sourceFile.data.type,
-            //       file: sourceFile.data.file,
-            //       size: sourceFile.data.size,
-            //       created_at: sourceFile.data.created_at,
-            //       update_at: getTimestamp().data,
-            //     })
-            //     item.children?.length && addR(item.children,arr);
-            //   })
-            //   return arr;
-            // }
-            let sourceTree = this.toTree(
+            // 源目录树形结构
+            let sourceTree: any[] = this.toTree(
               await this.searchAllChildren(sourceFile.data.id),
             )
+            // console.log(sourceTree, JSON.stringify(sourceTree))
             this.is(target)
               .then(async (e: QApi) => {
                 let targetTree = this.toTree(
@@ -738,48 +825,11 @@ export default class VFS extends ATree implements IVFS, ICommand {
                 console.log(targetTree)
               })
               .catch(() => {
+                this.createNestedNodes(sourceTree, target, source)
                 // let sourceData=await this.searchAllChildren(sourceFile.data.id);
                 // console.log(sourceTree);
                 // addR(sourceTree);
               })
-            // const targetFile: QApi =await this.is(target).catch(() => {});
-            // if (targetFile === undefined) return
-            // let targetTree=this.toTree(await this.searchAllChildren(targetFile.data.id));
-
-            // for (const itemSAC of await this.searchAllChildren(sourceFile.data.id)) {
-            //   // await this.file.delete(itemSAC.id)
-            //   const targetFile: QApi =await this.is(target).catch(() => {});
-            //   for (const itemSACT of await this.searchAllChildren(targetFile.data.id)) {
-            //
-            //   }
-            //
-            //   await this.is(target)
-            //     .then(async (e: QApi) => {
-            //       for (const itemSACT of await this.searchAllChildren(e.data.id)) {
-            //         if (itemSAC.name===itemSACT.name){
-            //           if (type.indexOf(ECp.forced) !== -1){
-            //
-            //           }else{
-            //             return reject(
-            //               QAL(
-            //                 window.LogIntensityE.Error,
-            //                 VFSL.type,
-            //                 VFSL.cpTargetError,
-            //                 [target, e],
-            //                 VFSL.cpTargetError,
-            //                 CodeE.NotFound,
-            //               ),
-            //             )
-            //           }
-            //         }
-            //         // 强制覆盖文件或目录
-            //         if (itemSAC.name===itemSACT.name && type.indexOf(ECp.forced) !== -1){
-            //           await this.file.delete(itemSACT.id)
-            //         }
-            //       }
-            //     })
-            //     .catch(() => {})
-            // }
           }
         }
       }
@@ -965,8 +1015,8 @@ export default class VFS extends ATree implements IVFS, ICommand {
                 }
                 temp.type = item.type
                 temp.size = item.size
-                temp.date = item.date
-                temp.time = item.time
+                temp.created_at = item.created_at
+                temp.update_at = item.update_at
               }
             } else {
               // 文件名开头为"."是隐藏文件，如要展示：ls('a')
@@ -1190,9 +1240,9 @@ export default class VFS extends ATree implements IVFS, ICommand {
    */
   getNamePath(path: string = this.path): { name: string; path: string } {
     // 去掉最后面的''
-    let pathArr = path.split('/').filter((item) => item !== '')
+    let pathArr: string[] = path.split('/').filter((item) => item !== '')
     // 去掉最后一个字段
-    let name = pathArr.at(-1)
+    let name: string = pathArr.at(-1)
     // 去掉最后一个字段后的路径
     pathArr[pathArr.length - 1] = ''
     path = '/' + pathArr.join('/')
@@ -1200,10 +1250,21 @@ export default class VFS extends ATree implements IVFS, ICommand {
   }
 
   /**
-   * 根据this.path获取id
+   * 获取pid
    * @param {string} [paths=this.path] 路径
    */
-  getId(paths: string = this.path) {
+  async getPid(paths: string = this.path): Promise<number> {
+    let { path } = this.getNamePath(paths)
+    if (path === '/') return 0
+    let res: QApi = await this.is(path)
+    return res.data.id
+  }
+
+  /**
+   * 根据path获取id
+   * @param {string} [paths=this.path] 路径
+   */
+  getId(paths: string = this.path): Promise<number> {
     return new Promise((resolve, reject) => {
       if (paths === '/') return resolve(0)
       let { name, path } = this.getNamePath(paths)
@@ -1229,6 +1290,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
    * @param {string} successMessage 正确消息
    * @param {string} errorMessage1 错误消息
    * @param {string} errorMessage2 存在错误消息
+   * @param {string} [paths=this.path] 路径
    * @private
    */
   private add(
@@ -1237,6 +1299,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
     successMessage: string,
     errorMessage1: string,
     errorMessage2: string,
+    paths: string = this.path,
   ) {
     return new Promise((resolve, reject) => {
       let ifnc: QApi = isFileNameCorrect(name)
@@ -1253,11 +1316,11 @@ export default class VFS extends ATree implements IVFS, ICommand {
         )
       }
       const add = async () => {
-        this.path = this.addSlash(this.path)
+        paths = this.addSlash(paths)
         this.file
           .add({
             pid: await this.getId(),
-            path: this.path,
+            path: paths,
             name: name,
             type: type,
             file: '',

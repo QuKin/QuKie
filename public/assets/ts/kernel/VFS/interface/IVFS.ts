@@ -7,6 +7,8 @@
  * @Date            2023/8/14 14:04
  */
 import QDB from '../../systemCallInterface/QDB.js'
+import { IFileFormat } from './IFileFormat.js'
+import { QApi } from '../../systemCallInterface/QApi.js'
 
 export interface IVFS {
   file: QDB
@@ -39,9 +41,10 @@ export interface IVFS {
   isFile(file: string)
 
   /**
-   * 根据this.path获取id
+   * 根据path获取id
+   * @param {string} [paths=this.path] 路径
    */
-  getId()
+  getId(paths: string): Promise<number>
 
   /**
    * 添加判断路径最后一个字符是否是/，否就添加
@@ -61,4 +64,29 @@ export interface IVFS {
    * @returns {{name:string,path:string}}
    */
   getNamePath(): { name: string; path: string }
+
+  /**
+   * 创建多层节点
+   * @param {IFileFormat[]} node 节点
+   * @param {string} paths 路径
+   * @param {string} source 源文件
+   */
+  createNestedNodes(
+    node: IFileFormat[],
+    paths: string,
+    source: string,
+  ): Promise<QApi>
+
+  /**
+   * 根据路径获取pid
+   * @param {string} [paths=this.path] 路径
+   */
+  getPid(paths: string): Promise<number>
+
+  /**
+   * 判断是否有该路径
+   * @param {string} path 路径
+   * @returns {Promise<boolean>}
+   */
+  isPathTF(path: string): Promise<boolean>
 }

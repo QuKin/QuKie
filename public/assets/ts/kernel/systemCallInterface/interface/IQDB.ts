@@ -31,10 +31,10 @@ export interface IQDB {
 
   /**
    * 插入数据
-   * @param {object} data 数据
+   * @param {any} data 数据
    * @returns {Promise}
    */
-  add(data: object)
+  add(data: any): Promise<QApi>
 
   /**
    * 获取DB

@@ -169,17 +169,18 @@ export default class QDB implements IQDB {
 
   /**
    * 插入数据
-   * @param {object} data 数据
+   * @param {any} data 数据
    * @returns {Promise}
    */
-  add(data: object) {
+  add(data: any): Promise<QApi> {
     return new Promise((resolve, reject) => {
       const request = this.db
         .transaction([this.getStoreName()], 'readwrite') // 事务对象 指定表格名称和操作模式（"只读"或"读写"）
         .objectStore(this.getStoreName()) // 仓库对象
         .add(data)
 
-      request.onsuccess = function () {
+      request.onsuccess = function (event: any) {
+        data.id = event.target.result
         resolve(
           QAL(
             window.LogIntensityE.SuccessError,

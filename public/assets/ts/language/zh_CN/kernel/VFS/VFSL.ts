@@ -41,4 +41,6 @@ export enum VFSL {
   cpTargetError = 'cp命令-目标文件存在，请使用f参数进行强制操作',
   cpTargetNotError = 'cp命令-目标文件路径不可用',
   cpSuccess = '复制成功',
+  createNestedNodesSuccess = '创建多层节点成功',
+  createNestedNodesError = '路径错误',
 }

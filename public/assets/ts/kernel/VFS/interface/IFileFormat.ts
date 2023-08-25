@@ -21,14 +21,18 @@ export interface IFileFormat {
   file?: any
   // 大小
   size?: number
-  // 时间
-  time?: string
-  // 日期
-  date?: string
+  // 创建时间
+  created_at?: string
+  // 修改时间
+  update_at?: string
   // 描述
   des?: string
   // 版本
   version?: number
   // 文件数量，主要用在ls返回
   quantities?: number
+  // 子节点，主要用在cp
+  children?: IFileFormat[]
+  // 层结构，主要用在cp
+  level?: number
 }
