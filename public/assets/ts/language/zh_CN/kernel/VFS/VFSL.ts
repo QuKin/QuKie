@@ -39,4 +39,6 @@ export enum VFSL {
   duError = '获取当前文件大小失败',
   cpSourceNotFound = 'cp命令-源文件不存在',
   cpTargetError = 'cp命令-目标文件存在，请使用f参数进行强制操作',
+  cpTargetNotError = 'cp命令-目标文件路径不可用',
+  cpSuccess = '复制成功',
 }

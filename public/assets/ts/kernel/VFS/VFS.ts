@@ -492,6 +492,14 @@ export default class VFS extends ATree implements IVFS, ICommand {
     return false
   }
 
+  async isPathTF(path: string): Promise<boolean> {
+    let temp: boolean = true
+    await this.is(path).catch(() => {
+      temp = false
+    })
+    return temp
+  }
+
   /**
    * 复制目录或文件
    * @param {string} source 源文件
@@ -552,128 +560,227 @@ export default class VFS extends ATree implements IVFS, ICommand {
       })
       if (sourceFile === undefined) return
 
-      if (arguments.length !== 3 && !!type && type.indexOf(ECp.forced) === -1) {
-        // 判断目标文件是否存在，存在报错
-        return await this.is(target)
+      const addFile = (
+        paths: string,
+        type: EFileType,
+        file: string,
+        size: number,
+      ): void => {
+        let { path, name } = this.getNamePath(paths)
+        this.is(path)
+          .then(async (e: QApi) => {
+            await this.file.add({
+              pid: e.data.id,
+              path: path,
+              name: name,
+              type: type,
+              file: file,
+              size: size,
+              created_at: getTimestamp().data,
+              update_at: getTimestamp().data,
+            })
+            return reject(
+              QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cpSuccess),
+            )
+          })
+          .catch((e) => {
+            return reject(
+              QAL(
+                window.LogIntensityE.Error,
+                VFSL.type,
+                VFSL.cpTargetNotError,
+                e,
+                VFSL.cpTargetNotError,
+                CodeE.NotFound,
+              ),
+            )
+          })
+      }
+      if (arguments.length === 2) {
+        await this.is(target)
           .then((e) => {
+            // 存在目标文件
+            return reject(
+              QAL(
+                window.LogIntensityE.Error,
+                VFSL.type,
+                VFSL.cpTargetNotError,
+                e,
+                VFSL.cpTargetNotError,
+                CodeE.NotFound,
+              ),
+            )
+          })
+          .catch(async () => {
+            let { name, path } = this.getNamePath(target)
+            await this.file.add({
+              pid: sourceFile.data.pid,
+              path: path,
+              name: name,
+              type: sourceFile.data.type,
+              file: sourceFile.data.file,
+              size: sourceFile.data.size,
+              created_at: sourceFile.data.created_at,
+              update_at: getTimestamp().data,
+            })
+            return reject(
+              QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cpSuccess),
+            )
+          })
+      }
+      // 建立连接
+      if (arguments.length === 3 && !!type && type.indexOf(ECp.link) !== -1) {
+        if (await this.isPathTF(target)) {
+          if (type.indexOf(ECp.forced) !== -1) {
+            await this.is(target).then((e: QApi): void => {
+              // 如有先进行删除在创建
+              this.file.delete(e.data.id).then(() => {
+                addFile(target, EFileType.link, source, 0)
+              })
+            })
+          } else {
             return reject(
               QAL(
                 window.LogIntensityE.Error,
                 VFSL.type,
                 VFSL.cpTargetError,
-                [target, e],
+                [],
                 VFSL.cpTargetError,
                 CodeE.NotFound,
               ),
             )
-          })
-          .catch(() => {
-            // 必须catch引出来，否则会报错
-          })
-      }
-      if (arguments.length === 3) {
-        const addTemp = async (path: string, name: string) => {
-          await this.file.add({
-            pid: sourceFile.data.pid,
-            path: path,
-            name: name,
-            type: sourceFile.data.type,
-            file: sourceFile.data.file,
-            size: sourceFile.data.size,
-            created_at: sourceFile.data.created_at,
-            update_at: getTimestamp(),
-          })
+          }
+        } else {
+          addFile(target, EFileType.link, source, 0)
         }
-        // 强制覆盖文件或目录
-        if (type.indexOf(ECp.forced) !== -1) {
-          await this.is(target)
-            .then((e: QApi) => {
-              // 如有先进行删除在创建
-              this.file.delete(e.data.id).then(() => {
-                addTemp(e.data.path, sourceFile.data.name)
-              })
-            })
-            .catch(() => {
-              let { name, path } = this.getNamePath()
-              addTemp(path, name)
-            })
-        }
-        // 将目录下所有文件与子目录一并处理
-        if (type.indexOf(ECp.recursive) !== -1) {
-          // const addR=(data:any[],arr:any[]=[])=>{
-          //   data.forEach(item=>{
-          //     console.log(item);
-          //     await this.file.add({
-          //       pid: sourceFile.data.pid,
-          //       path: path,
-          //       name: name,
-          //       type: sourceFile.data.type,
-          //       file: sourceFile.data.file,
-          //       size: sourceFile.data.size,
-          //       created_at: sourceFile.data.created_at,
-          //       update_at: getTimestamp(),
-          //     })
-          //     item.children?.length && addR(item.children,arr);
-          //   })
-          //   return arr;
-          // }
-          let sourceTree = this.toTree(
-            await this.searchAllChildren(sourceFile.data.id),
-          )
-          this.is(target)
-            .then(async (e: QApi) => {
-              let targetTree = this.toTree(
-                await this.searchAllChildren(e.data.id),
+      } else {
+        if (
+          arguments.length !== 3 &&
+          !!type &&
+          type.indexOf(ECp.forced) === -1
+        ) {
+          // 判断目标文件是否存在，存在报错
+          return await this.is(target)
+            .then((e) => {
+              return reject(
+                QAL(
+                  window.LogIntensityE.Error,
+                  VFSL.type,
+                  VFSL.cpTargetError,
+                  [target, e],
+                  VFSL.cpTargetError,
+                  CodeE.NotFound,
+                ),
               )
-              console.log(sourceTree)
-              console.log(targetTree)
             })
             .catch(() => {
-              // let sourceData=await this.searchAllChildren(sourceFile.data.id);
-              // console.log(sourceTree);
-              // addR(sourceTree);
+              // 必须catch引出来，否则会报错
             })
-          // const targetFile: QApi =await this.is(target).catch(() => {});
-          // if (targetFile === undefined) return
-          // let targetTree=this.toTree(await this.searchAllChildren(targetFile.data.id));
-
-          // for (const itemSAC of await this.searchAllChildren(sourceFile.data.id)) {
-          //   // await this.file.delete(itemSAC.id)
-          //   const targetFile: QApi =await this.is(target).catch(() => {});
-          //   for (const itemSACT of await this.searchAllChildren(targetFile.data.id)) {
-          //
-          //   }
-          //
-          //   await this.is(target)
-          //     .then(async (e: QApi) => {
-          //       for (const itemSACT of await this.searchAllChildren(e.data.id)) {
-          //         if (itemSAC.name===itemSACT.name){
-          //           if (type.indexOf(ECp.forced) !== -1){
-          //
-          //           }else{
-          //             return reject(
-          //               QAL(
-          //                 window.LogIntensityE.Error,
-          //                 VFSL.type,
-          //                 VFSL.cpTargetError,
-          //                 [target, e],
-          //                 VFSL.cpTargetError,
-          //                 CodeE.NotFound,
-          //               ),
-          //             )
-          //           }
-          //         }
-          //         // 强制覆盖文件或目录
-          //         if (itemSAC.name===itemSACT.name && type.indexOf(ECp.forced) !== -1){
-          //           await this.file.delete(itemSACT.id)
-          //         }
-          //       }
-          //     })
-          //     .catch(() => {})
-          // }
         }
-        // 建立连接
-        if (type.indexOf(ECp.link) !== -1) {
+        if (arguments.length === 3) {
+          const addTemp = async (path: string, name: string) => {
+            await this.file.add({
+              pid: sourceFile.data.pid,
+              path: path,
+              name: name,
+              type: sourceFile.data.type,
+              file: sourceFile.data.file,
+              size: sourceFile.data.size,
+              created_at: sourceFile.data.created_at,
+              update_at: getTimestamp().data,
+            })
+            return reject(
+              QAL(window.LogIntensityE.SuccessError, VFSL.type, VFSL.cpSuccess),
+            )
+          }
+          // 强制覆盖文件或目录
+          if (type.indexOf(ECp.forced) !== -1) {
+            await this.is(target)
+              .then((e: QApi) => {
+                // 如有先进行删除在创建
+                this.file.delete(e.data.id).then(() => {
+                  addTemp(e.data.path, sourceFile.data.name)
+                })
+              })
+              .catch(() => {
+                let { name, path } = this.getNamePath()
+                addTemp(path, name)
+              })
+          }
+          // 将目录下所有文件与子目录一并处理
+          if (type.indexOf(ECp.recursive) !== -1) {
+            // const addR=(data:any[],arr:any[]=[])=>{
+            //   data.forEach(item=>{
+            //     console.log(item);
+            //     await this.file.add({
+            //       pid: sourceFile.data.pid,
+            //       path: path,
+            //       name: name,
+            //       type: sourceFile.data.type,
+            //       file: sourceFile.data.file,
+            //       size: sourceFile.data.size,
+            //       created_at: sourceFile.data.created_at,
+            //       update_at: getTimestamp().data,
+            //     })
+            //     item.children?.length && addR(item.children,arr);
+            //   })
+            //   return arr;
+            // }
+            let sourceTree = this.toTree(
+              await this.searchAllChildren(sourceFile.data.id),
+            )
+            this.is(target)
+              .then(async (e: QApi) => {
+                let targetTree = this.toTree(
+                  await this.searchAllChildren(e.data.id),
+                )
+                console.log(sourceTree)
+                console.log(targetTree)
+              })
+              .catch(() => {
+                // let sourceData=await this.searchAllChildren(sourceFile.data.id);
+                // console.log(sourceTree);
+                // addR(sourceTree);
+              })
+            // const targetFile: QApi =await this.is(target).catch(() => {});
+            // if (targetFile === undefined) return
+            // let targetTree=this.toTree(await this.searchAllChildren(targetFile.data.id));
+
+            // for (const itemSAC of await this.searchAllChildren(sourceFile.data.id)) {
+            //   // await this.file.delete(itemSAC.id)
+            //   const targetFile: QApi =await this.is(target).catch(() => {});
+            //   for (const itemSACT of await this.searchAllChildren(targetFile.data.id)) {
+            //
+            //   }
+            //
+            //   await this.is(target)
+            //     .then(async (e: QApi) => {
+            //       for (const itemSACT of await this.searchAllChildren(e.data.id)) {
+            //         if (itemSAC.name===itemSACT.name){
+            //           if (type.indexOf(ECp.forced) !== -1){
+            //
+            //           }else{
+            //             return reject(
+            //               QAL(
+            //                 window.LogIntensityE.Error,
+            //                 VFSL.type,
+            //                 VFSL.cpTargetError,
+            //                 [target, e],
+            //                 VFSL.cpTargetError,
+            //                 CodeE.NotFound,
+            //               ),
+            //             )
+            //           }
+            //         }
+            //         // 强制覆盖文件或目录
+            //         if (itemSAC.name===itemSACT.name && type.indexOf(ECp.forced) !== -1){
+            //           await this.file.delete(itemSACT.id)
+            //         }
+            //       }
+            //     })
+            //     .catch(() => {})
+            // }
+          }
         }
       }
     })
@@ -683,7 +790,7 @@ export default class VFS extends ATree implements IVFS, ICommand {
    * 查找所有子节点
    * @param {number} id 当前节点id
    */
-  async searchAllChildren(id: number) {
+  async searchAllChildren(id: number): Promise<IFileFormat[]> {
     let arr: IFileFormat[] = []
     // 使用一个队列来存储待搜索的id
     let queue: number[] = [id]
@@ -792,7 +899,6 @@ export default class VFS extends ATree implements IVFS, ICommand {
 
   /**
    * 输出当前目录的列表
-   * @returns {object[]}
    */
   ls()
   /**
@@ -801,7 +907,6 @@ export default class VFS extends ATree implements IVFS, ICommand {
    * i:显示文件id<br>
    * l:{文件个数,文件大小,创建日期,文件名,文件名}
    * @param {ELs|string} type 类型 a|l|i
-   * @returns {object[]}
    */
   ls(type: ELs | string)
   ls(type?: ELs | string) {
@@ -1080,11 +1185,10 @@ export default class VFS extends ATree implements IVFS, ICommand {
 
   /**
    * 获取路径上的最后一个字符和去除后的路径
+   * @param {string} [path=this.path] 路径
    * @returns {{name:string,path:string}}
    */
-  getNamePath(): { name: string; path: string } {
-    let path: string = this.path
-
+  getNamePath(path: string = this.path): { name: string; path: string } {
     // 去掉最后面的''
     let pathArr = path.split('/').filter((item) => item !== '')
     // 去掉最后一个字段
@@ -1097,11 +1201,12 @@ export default class VFS extends ATree implements IVFS, ICommand {
 
   /**
    * 根据this.path获取id
+   * @param {string} [paths=this.path] 路径
    */
-  getId() {
+  getId(paths: string = this.path) {
     return new Promise((resolve, reject) => {
-      if (this.path === '/') return resolve(0)
-      let { name, path } = this.getNamePath()
+      if (paths === '/') return resolve(0)
+      let { name, path } = this.getNamePath(paths)
 
       this.file
         .search('path', path)

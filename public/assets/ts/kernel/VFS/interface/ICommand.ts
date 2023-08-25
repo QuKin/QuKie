@@ -19,7 +19,6 @@ export interface ICommand {
 
   /**
    * 输出当前目录的列表
-   * @returns {object[]}
    */
   ls()
 
@@ -29,7 +28,6 @@ export interface ICommand {
    * i:显示文件id<br>
    * l:{文件个数,文件大小,创建日期,文件名}
    * @param {ELs|string} type 类型 a|l|i
-   * @returns {object[]}
    */
   ls(type: ELs | string)
 
